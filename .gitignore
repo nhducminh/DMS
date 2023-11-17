@@ -148,3 +148,6 @@ Units/Units20231108092723.xls
 Units/Units20231113080140.xls
 Thong_Tin_San_Pham/20231114231514_Thong_Tin_San_Pham.xlsx
 Thong_Tin_San_Pham/20231116083834_Thong_Tin_San_Pham.xlsx
+dags/__pycache__/2NongDags.cpython-310.pyc
+dags/__pycache__/NongDags.cpython-310.pyc
+.gitignore
