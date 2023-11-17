@@ -151,3 +151,4 @@ Thong_Tin_San_Pham/20231116083834_Thong_Tin_San_Pham.xlsx
 dags/__pycache__/2NongDags.cpython-310.pyc
 dags/__pycache__/NongDags.cpython-310.pyc
 .gitignore
+dags/__pycache__/sharepointDMSLoadData.cpython-310.pyc

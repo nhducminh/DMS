@@ -69,9 +69,9 @@ site = ps.SPInterface(sharepoint_base_url, username_shrpt, password_shrpt)
 # begein DAG
 with DAG(
     dag_id="2NongPrice",
-    # schedule_interval="0 */6 * * *",
-    schedule="@daily",
-    start_date=pendulum.datetime(2023, 10, 30, tz="UTC"),
+    schedule_interval="0 2 * * *",
+    # schedule="@daily",
+    start_date=pendulum.datetime(2023, 10, 30, 0, 0, 0, 0, tz="Asia/Bangkok"),
     catchup=False,
     tags=["2Nong"],
 ) as dag:

@@ -212,9 +212,9 @@ def MasterData2(folder, fileName):
 # begein DAG
 with DAG(
     dag_id="SharepointLoadData",
-    # schedule_interval="0 */6 * * *",
-    schedule="@daily",
-    start_date=pendulum.datetime(2023, 10, 30, tz="UTC"),
+    schedule_interval="0 1 * * *",
+    # schedule="@daily",
+    start_date=pendulum.datetime(2023, 10, 30, 0, 0, 0, 0, tz="Asia/Bangkok"),
     catchup=False,
     tags=["DMS"],
 ) as dag:
