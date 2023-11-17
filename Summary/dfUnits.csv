@@ -1,0 +1,153 @@
+STT,Mã đơn vị ,Tên đơn vị ,Tên viết tắt,Loại đơn vị,Tên đơn vị cha,Trạng thái
+1,PVFCCO,Phân Bón Phú Mỹ,PVFCCoAdmin,DAMPHUMY,,Hoạt động
+2,ANGIANG,Tỉnh An Giang,An Giang,TỈNH,Khu vực Tây Nam Bộ,Hoạt động
+3,BACGIANG,Tỉnh Bắc Giang,Bắc Giang,TỈNH,Khu vực Miền Bắc,Hoạt động
+4,BENTRE,Tỉnh Bến Tre,Bến Tre,TỈNH,Khu vực Tây Nam Bộ,Hoạt động
+5,BINHDINH,Tỉnh Bình Định,Bình Định,TỈNH,Khu vực Miền Trung,Hoạt động
+6,BINHPHUOC,Tỉnh Bình Phước,Tỉnh Bình Phước,TỈNH,Khu vực Đông Nam Bộ,Hoạt động
+7,BINHTHUAN,Tỉnh Bình Thuận,Tỉnh Bình Thuận,TỈNH,Khu vực Đông Nam Bộ,Hoạt động
+8,C1ANHTHI,Công ty TNHH TMDV Anh Thi,Anh Thi,C1,Tỉnh Kon Tum,Hoạt động
+9,C1ANTHAI,"Công ty TNHH Vật tư Nông nghiệp, Xây dựng Anh Thái",ATHN,C1,Thành phố Hà Nội,Hoạt động
+10,C1BACGIANG,Công ty Cổ phần Sản xuất và Thương mại Tân Nông,TNBG,C1,Tỉnh Bắc Giang,Hoạt động
+11,C1BACHATINH,Công ty TNHH Vật tư Tổng hợp Bắc Hà Tĩnh,BACHT,C1,Tỉnh Hà Tĩnh,Hoạt động
+12,C1BANGTUYEN,Công ty TNHH Bằng Tuyên,BTNB,C1,Tỉnh Ninh Bình,Hoạt động
+13,C1BINHHUONG,CÔNG TY TNHH TM&DV BÌNH HƯƠNG,Bình Hương,C1,Tỉnh Ninh Thuận,Hoạt động
+14,C1BINHTHUAN,CÔNG TY CP DVNN BÌNH THUẬN,Bình Thuận,C1,Tỉnh Bình Thuận,Hoạt động
+15,C1CUONGLIEN,Công ty TNHH VTNN Cường Liên,CLND,C1,Tỉnh Thái Bình,Hoạt động
+16,C1DANGKHOI,Công ty TNHH Đăng Khôi,Cty Đăng Khôi,C1,Tỉnh Khánh Hòa,Hoạt động
+17,C1DANNAM,Công ty TNHH MTV Nông nghiệp Dân Nam,Dân Nam,C1,Tỉnh Vĩnh Long,Hoạt động
+18,C1DAPTHANH,Công ty TNHH Đáp Thành,DTNB,C1,Tỉnh Ninh Bình,Hoạt động
+19,C1DNB,C1 Đông Nam Bộ,C1 Đông Nam Bộ,C1,Tỉnh Bình Phước,Hoạt động
+20,C1DONGHUE,Công ty TNHH Dịch vụ Thương mại Nông nghiệp Đông Huê,Đông Huê,C1,Tỉnh Tiền Giang,Hoạt động
+21,C1DUCTHANH,CÔNG TY TNHH TM - DV SX XNK ĐỨC THÀNH,Đức Thành,C1,Tỉnh Tây Ninh,Hoạt động
+22,C1DUCTRUNG,Công ty TNHH Dịch vụ Nông nghiệp Đức Trung,Đức Trung,C1,Tỉnh Khánh Hòa,Hoạt động
+23,C1DUCXINH,Công ty TNHH DVTM Đức Xinh,Đức Xinh,C1,Tỉnh Quảng Trị,Hoạt động
+24,C1HOANAM,CÔNG TY CỔ PHẦN HOA NAM,Hoa Nam,C1,Tỉnh Long An,Hoạt động
+25,C1HOANGDUNG,CÔNG TY TNHH SX - TM HOÀNG DŨNG,Hoàng Dũng,C1,Tỉnh Tây Ninh,Hoạt động
+26,C1HOANGNHAN,Công ty TNHH TMDV TH Hoàng Nhân,Hoàng Nhân,C1,Tỉnh Bình Định,Hoạt động
+27,C1HOANTHIEN,CÔNG TY TNHH TM - SX  HOÀN THIỆN,Hoàn Thiện,C1,Tỉnh Bình Thuận,Hoạt động
+28,C1HONGCAM,Công ty TNHH TM Hồng Cẩm,Công ty Hồng Cẩm,C1,Tỉnh Phú Yên,Hoạt động
+29,C1HUNGTHANH,Công ty TNHH VTNN Hưng Thạnh,Cty Hưng Thạnh,C1,Tỉnh Sóc Trăng,Hoạt động
+30,C1HUUTHANH,Công ty TNHH Sản Xuất Phân Bón Hữu Thành,Hữu Thành,C1,Tỉnh Đồng Tháp,Hoạt động
+31,C1HUUTHANHI,Công ty TNHH Hữu Thành I,Hữu Thành I,C1,Tỉnh Đồng Tháp,Hoạt động
+32,C1HUYLAN,Công ty TNHH VTNN Huy Lan,Công ty Huy Lan,C1,Tỉnh Thái Bình,Hoạt động
+33,C1KHAILINH,Công ty TNHH Khải Linh,KLHY,C1,Tỉnh Hưng Yên,Hoạt động
+34,C1KIMHOANG,DNTN Kim Hoàng,Kim Hoàng,C1,Tỉnh Đồng Tháp,Hoạt động
+35,C1KIMHUE,CÔNG TY TNHH VƯƠNG KIM HUỆ,Kim Huệ,C1,Tỉnh Tây Ninh,Hoạt động
+36,C1KIMNGOAN,CÔNG TY TNHH TM - DV KIM NGOAN,Kim Ngoan,C1,Tỉnh Bình Phước,Hoạt động
+37,C1KIMVUBICH,Công ty TNHH TM Kim Vũ Bích,Kim Vũ Bích,C1,Tỉnh Bình Định,Hoạt động
+38,C1LTHATINH,Xí Nghiệp Kinh doanh Lương thực Tổng hợp đường 8 - CN Công ty CP Lương thực Hà Tĩnh,LTHT,C1,Tỉnh Hà Tĩnh,Hoạt động
+39,C1MINHDUNG,CÔNG TY TNHH MTV XNK MINH DŨNG,Minh Dũng,C1,Tỉnh Đắk Nông,Hoạt động
+40,C1MINHKHOA,CÔNG TY TNHH TM DV MINH KHOA,Minh Khoa,C1,Tỉnh Lâm Đồng,Hoạt động
+41,C1MINHTAN,Công ty CP XNK PB Minh Tân,Minh Tân,C1,Tỉnh Đắk Lắk,Hoạt động
+42,C1MINHTRUNG,CÔNG TY TNHH MINH TRUNG,Minh Trung,C1,Tỉnh Tây Ninh,Hoạt động
+43,C1MT,C1MT Quản lý,C1MT,C1,Tỉnh Bình Định,Hoạt động
+44,C1NAMDUGL,Công ty TNHH Nam Du GL,Nam Du GL,C1,Tỉnh Gia Lai,Hoạt động
+45,C1NAMHANG,Công ty TNHH VTNN Nam Hằng,NHTH,C1,Tỉnh Thanh Hóa,Hoạt động
+46,C1NAMPHAT,Công ty TNHH Nam Phát,Nam Phát,C1,Tỉnh Hậu Giang,Hoạt động
+47,C1NGOCNHAM,Công ty TNHH Thương mại Ngọc Nhâm,NNTH,C1,Tỉnh Thanh Hóa,Hoạt động
+48,C1NGOCVY,CÔNG TY TNHH MTV NGỌC VY,Ngọc Vy,C1,Tỉnh Đắk Nông,Hoạt động
+49,C1NHULINH,CÔNG TY TNHH NHƯ LINH,Như Linh,C1,Tỉnh Lâm Đồng,Hoạt động
+50,C1NLNQNG,Công ty CP VTKT NLN Quảng Ngãi,NLN Quảng Ngãi,C1,Tỉnh Quảng Ngãi,Hoạt động
+51,C1PHONGTRANG,Công ty TNHH Thương mại Phong Trang,PTHD,C1,Tỉnh Hải Dương,Hoạt động
+52,C1PHUBINHGL,Công ty CP Phú Bình GL,Phú Bình GL,C1,Tỉnh Gia Lai,Hoạt động
+53,C1PHUHUONG,Công ty TNHH Phú Hương,PHTH,C1,Tỉnh Thanh Hóa,Hoạt động
+54,C1PHUNGHUNG,Công ty Cổ phần Phùng Hưng,PHHN,C1,Thành phố Hà Nội,Hoạt động
+55,C1PHUQUY,Công ty Cổ phần Phân bón Phủ Quỳ,PQNA,C1,Tỉnh Nghệ An,Hoạt động
+56,C1QUYENVAN,Công ty TNHH TM DV Quyền Vân,QVTB,C1,Tỉnh Thái Bình,Hoạt động
+57,C1QUYETHIEN,Công ty TNHH Dịch vụ và Thương mại Quyết Hiên,QHQB,C1,Tỉnh Quảng Bình,Hoạt động
+58,C1SONNGUYET,Công ty TNHH MTV TM-DV Sơn Nguyệt,Sơn Nguyệt,C1,Tỉnh Gia Lai,Hoạt động
+59,C1SXTMDVTNA,Công ty TNHH SX TMDV TnA,TnA,C1,Tỉnh Quảng Ngãi,Hoạt động
+60,C1TAMHUNG,DNTN TM Tám Hùng,Tâm Hùng,C1,Tỉnh Khánh Hòa,Hoạt động
+61,C1TANAN,Công ty TNHH Dịch vụ Tân An,TAHB,C1,Tỉnh Hòa Bình,Hoạt động
+62,C1TANDUC,Công ty TNHH DVTM Tấn Đức,TDTH,C1,Tỉnh Thanh Hóa,Hoạt động
+63,C1TANTHANH,DNTN Phân bón Tân Thành,PB Tân Thành,C1,Tỉnh Kiên Giang,Hoạt động
+64,C1TANTRIPHAT,CÔNG TY TNHH SX - TM DV XNK TÂN TRÍ PHÁT,Tân Trí Phát,C1,Tỉnh Long An,Hoạt động
+65,C1THANHNAM,Công ty Cổ phần Phát triển Thương mại Đầu tư Xây dựng Thành Nam Group,TNHP,C1,Thành phố Hải Phòng,Hoạt động
+66,C1THANHPHUONG,Công ty TNHH Phân bón Thành Phương,Thành Phương,C1,Tỉnh Đồng Tháp,Hoạt động
+67,C1THANHVINH,Công ty CP XD TM Thành Vinh,Công ty Thành Vinh,C1,Tỉnh Thái Nguyên,Hoạt động
+68,C1THIENLONG,Công ty TNHH TM Thiên Long,Thiên Long,C1,Tỉnh Bình Định,Hoạt động
+69,C1THIEUYEN,Công ty Cổ phần Thương mại Thiệu Yên Thanh Hoá,TYTH,C1,Tỉnh Thanh Hóa,Hoạt động
+70,C1THUDUNG,DNTN Thu Dung,Thu Dung,C1,Tỉnh Bến Tre,Hoạt động
+71,C1THUNGHIA,Công ty TNHH Thu Nghĩa,Thu Nghĩa,C1,Tỉnh Quảng Trị,Hoạt động
+72,C1TNB,C1 Tây Nam Bộ,C1TNB,C1,Tp. Cần Thơ,Hoạt động
+73,C1TNVIETNGA,Công ty Cổ phần Tập đoàn Việt Nga,Việt Nga,C1,Tỉnh Đồng Tháp,Hoạt động
+74,C1TOANHUONG,Công ty TNHH Thương mại Toản Hương,THTH,C1,Tỉnh Thanh Hóa,Hoạt động
+75,C1TRANTHINGOAN,DNTN Trần Thị Ngoan,Trần Thị Ngoan,C1,Tỉnh Bến Tre,Hoạt động
+76,C1TRILICH,Công ty TNHH TM TH Tri Lịch,TLQB,C1,Tỉnh Quảng Bình,Hoạt động
+77,C1TRUNGHIEU,Công ty TNHH MTV TM Trung Hiếu,Trung Hiếu,C1,Tỉnh Đắk Lắk,Hoạt động
+78,C1TUANVU,CÔNG TY TNHH VẬN TẢI PHÂN BÓN TUẤN VŨ,Tuấn Vũ,C1,Tỉnh Đồng Nai,Hoạt động
+79,C1TUONGDUNGAG,Công ty TNHH MTV Tường Dung An Giang,Tường Dung,C1,Tỉnh An Giang,Hoạt động
+80,C1TUONGNGUYEN,Công ty TNHH TM-DV-XNK Tường Nguyên,Tường Nguyên,C1,Tỉnh Đồng Tháp,Hoạt động
+81,C1UTNU,Công ty TNHH Út Nữ,Út Nữ,C1,Tỉnh Trà Vinh,Hoạt động
+82,C1VANHUONG,Công ty TNHH Văn Hường,VHHN,C1,Tỉnh Hà Nam,Hoạt động
+83,C1VIETMY,Công ty TNHH Việt Mỹ,VMNA,C1,Tỉnh Nghệ An,Hoạt động
+84,C1VIETPHUNG,CÔNG TY TNHH ĐĂNG VIỆT PHỤNG,Đăng Việt Phụng,C1,Tỉnh Lâm Đồng,Hoạt động
+85,C1VTNNIIDNA,Công ty CP VTNN II Đà Nẵng,VTNN II Đà Nẵng,C1,TP. Đà Nẵng,Hoạt động
+86,C1VTNNTTHUE,Công ty CP VTNN Thừa Thiên Huế,VTNN Thừa Thiên Huế,C1,Tỉnh Thừa Thiên Huế,Hoạt động
+87,CTMB,C1 Công ty MB,C1MB,C1,Thành phố Hà Nội,Hoạt động
+88,DAKLAK,Tỉnh Đắk Lắk,Đắk Lắk,TỈNH,Khu vực Miền Trung,Hoạt động
+89,DAKNONG,Tỉnh Đắk Nông,Tỉnh Đắk Nông,TỈNH,Khu vực Đông Nam Bộ,Hoạt động
+90,DANANG,TP. Đà Nẵng,Đà Nẵng,TỈNH,Khu vực Miền Trung,Hoạt động
+91,DONGNAI,Tỉnh Đồng Nai,Tỉnh Đồng Nai,TỈNH,Khu vực Đông Nam Bộ,Hoạt động
+92,DONGTHAP,Tỉnh Đồng Tháp,Đồng Tháp,TỈNH,Khu vực Tây Nam Bộ,Hoạt động
+93,GIALAI,Tỉnh Gia Lai,Gia Lai,TỈNH,Khu vực Miền Trung,Hoạt động
+94,HAIDUONG,Tỉnh Hải Dương,Hải Dương,TỈNH,Khu vực Miền Bắc,Hoạt động
+95,HAIPHONG,Thành phố Hải Phòng,Hải Phòng,TỈNH,Khu vực Miền Bắc,Hoạt động
+96,HANAM,Tỉnh Hà Nam,Hà Nam,TỈNH,Khu vực Miền Bắc,Hoạt động
+97,HANOI,Thành phố Hà Nội,Hà Nội,TỈNH,Khu vực Miền Bắc,Hoạt động
+98,HATINH,Tỉnh Hà Tĩnh,Hà Tĩnh,TỈNH,Khu vực Miền Bắc,Hoạt động
+99,HAUGIANG,Tỉnh Hậu Giang,Hậu Giang,TỈNH,Khu vực Tây Nam Bộ,Hoạt động
+100,HOABINH,Tỉnh Hòa Bình,Hòa Bình,TỈNH,Khu vực Miền Bắc,Hoạt động
+101,HUNGYEN,Tỉnh Hưng Yên,Hưng Yên,TỈNH,Khu vực Miền Bắc,Hoạt động
+102,KENH,Kênh phân phối truyền thống,Kênh PP Truyền thống,KÊNH GT,Phân Bón Phú Mỹ,Hoạt động
+103,KENHDT,Kênh đào tạo,Kênh đào tạo,KÊNH GT,Phân Bón Phú Mỹ,Hoạt động
+104,KHANHHOA,Tỉnh Khánh Hòa,Khánh Hòa,TỈNH,Khu vực Miền Trung,Hoạt động
+105,KIENGIANG,Tỉnh Kiên Giang,Kiên Giang,TỈNH,Khu vực Tây Nam Bộ,Hoạt động
+106,KONTUM,Tỉnh Kon Tum,Kon Tum,TỈNH,Khu vực Miền Trung,Hoạt động
+107,KVDNB,Khu vực Đông Nam Bộ,KVDNB,KHU VỰC,Công ty Đông Nam Bộ,Hoạt động
+108,KVDT1,KV Đào tạo 1,KV DT1,KHU VỰC,Vùng đào tạo 1,Hoạt động
+109,KVMB,Khu vực Miền Bắc,KVMB,KHU VỰC,Công ty Miền Bắc,Hoạt động
+110,KVMT,Khu vực Miền Trung,KVMT,KHU VỰC,Công ty Miền Trung,Hoạt động
+111,KVTNB,Khu vực Tây Nam Bộ,KVTNB,KHU VỰC,Công ty Tây Nam Bộ,Hoạt động
+112,KV_KHTM,Khu vực Khách hàng thương mại,KHTM,KHU VỰC,Tổng Công ty,Hoạt động
+113,LAMDONG,Tỉnh Lâm Đồng,Tỉnh Lâm Đồng,TỈNH,Khu vực Đông Nam Bộ,Hoạt động
+114,LONGAN,Tỉnh Long An,Tỉnh Long An,TỈNH,Khu vực Đông Nam Bộ,Hoạt động
+115,NAMDINH,Tỉnh Nam Định,Nam Định,TỈNH,Khu vực Miền Bắc,Hoạt động
+116,NGHEAN,Tỉnh Nghệ An,Tỉnh Nghệ An,TỈNH,Khu vực Miền Bắc,Hoạt động
+117,NINHBINH,Tỉnh Ninh Bình,Ninh Bình,TỈNH,Khu vực Miền Bắc,Hoạt động
+118,NINHTHUAN,Tỉnh Ninh Thuận,Tỉnh Ninh Thuận,TỈNH,Khu vực Đông Nam Bộ,Hoạt động
+119,NNDT,Nông nghiệp đô thị,NNDT,KÊNH GT,Phân Bón Phú Mỹ,Hoạt động
+120,NPPDT1,NPP Việt Anh,NPP VA,C1,Tỉnh Đào tạo 1,Hoạt động
+121,NPPDT2,NPP Đào tạo 2,NPP DT2,C1,Tỉnh Đào tạo 1,Hoạt động
+122,NPPDT3,NPP Đào tạo 3,NPP03 DT3,C1,Tỉnh Đào tạo 2,Hoạt động
+123,NPPDT4,NPP Đào tạo 4,NPP04 DT4,C1,Tỉnh Đào tạo 2,Hoạt động
+124,NPPDT6,NPP Đào tạo 6,NPP DT6,C1,Tỉnh Đào tạo 3,Hoạt động
+125,NPPDT7,NPP Đào tạo 7,NPP Đào tạo 7,C1,Tỉnh Đào tạo 3,Hoạt động
+126,NPP_AO_001,C1 Ảo,C1 Ảo,C1,Tỉnh khách hàng thương mại,Hoạt động
+127,NPP_LONGCHAU,Công ty Long Châu,LC,C1,Tỉnh Bến Tre,Hoạt động
+128,PHUYEN,Tỉnh Phú Yên,Phú Yên,TỈNH,Khu vực Miền Trung,Hoạt động
+129,PVFCCO_PCE,Công ty Miền Trung,PCE,CTVM,Kênh phân phối truyền thống,Hoạt động
+130,PVFCCO_PSE,Công ty Đông Nam Bộ,PSE,CTVM,Kênh phân phối truyền thống,Hoạt động
+131,PVFCCO_PSW,Công ty Tây Nam Bộ,PSW,CTVM,Kênh phân phối truyền thống,Hoạt động
+132,PVFCCo_HQ,Tổng Công ty,HQ,CTVM,Kênh phân phối truyền thống,Hoạt động
+133,PVFCCo_PMB,Công ty Miền Bắc,PMB,CTVM,Kênh phân phối truyền thống,Hoạt động
+134,QUANGBINH,Tỉnh Quảng Bình,Quảng Bình,TỈNH,Khu vực Miền Bắc,Hoạt động
+135,QUANGNGAI,Tỉnh Quảng Ngãi,Quảng Ngãi,TỈNH,Khu vực Miền Trung,Hoạt động
+136,QUANGTRI,Tỉnh Quảng Trị,Quảng Trị,TỈNH,Khu vực Miền Trung,Hoạt động
+137,SOCTRANG,Tỉnh Sóc Trăng,Sóc Trăng,TỈNH,Khu vực Tây Nam Bộ,Hoạt động
+138,SONLA,Tỉnh Sơn La,Sơn La,TỈNH,Khu vực Miền Bắc,Hoạt động
+139,TAYNINH,Tỉnh Tây Ninh,Tỉnh Tây Ninh,TỈNH,Khu vực Đông Nam Bộ,Hoạt động
+140,THAIBINH,Tỉnh Thái Bình,Thái Bình,TỈNH,Khu vực Miền Bắc,Hoạt động
+141,THAINGUYEN,Tỉnh Thái Nguyên,Thái Nguyên,TỈNH,Khu vực Miền Bắc,Hoạt động
+142,THANHHOA,Tỉnh Thanh Hóa,Thanh Hóa,TỈNH,Khu vực Miền Bắc,Hoạt động
+143,THUATHIENHUE,Tỉnh Thừa Thiên Huế,Thừa Thiên Huế,TỈNH,Khu vực Miền Trung,Hoạt động
+144,TIENGIANG,Tỉnh Tiền Giang,Tiền Giang,TỈNH,Khu vực Tây Nam Bộ,Hoạt động
+145,TINHDT1,Tỉnh Đào tạo 1,Tỉnh DT1,TỈNH,KV Đào tạo 1,Hoạt động
+146,TINHDT2,Tỉnh Đào tạo 2,Tỉnh DT2,TỈNH,KV Đào tạo 1,Hoạt động
+147,TINHDT3,Tỉnh Đào tạo 3,Tỉnh DT3,TỈNH,KV Đào tạo 1,Hoạt động
+148,TINH_KHTM,Tỉnh khách hàng thương mại,TINH KHTM,TỈNH,Khu vực Khách hàng thương mại,Hoạt động
+149,TPCANTHO,Tp. Cần Thơ,Cần Thơ,TỈNH,Khu vực Tây Nam Bộ,Hoạt động
+150,TRAVINH,Tỉnh Trà Vinh,Trà Vinh,TỈNH,Khu vực Tây Nam Bộ,Hoạt động
+151,VINHLONG,Tỉnh Vĩnh Long,Vĩnh Long,TỈNH,Khu vực Tây Nam Bộ,Hoạt động
+152,VUNGDT,Vùng đào tạo 1,Vùng đào tạo,CTVM,Kênh đào tạo,Hoạt động
