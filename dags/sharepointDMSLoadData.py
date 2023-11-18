@@ -156,21 +156,23 @@ def MasterData1(folder, fileName):
         if date_time_obj == max(date_time_obj, temp):
             final = f
             temp = date_time_obj
-        print(f"final {final}")
+    print(f"final {final}")
 
-        dfUnits = pd.read_excel(sourcePath + "/" + final)
-        # Save the cleaned and processed DataFrame to a CSV file
-        print(f"save to {localPath}/Summary/{fileName}")
-        dfUnits.to_csv(localPath + f"/Summary/{fileName}", index=False)
-        print(
-            f"***\n upload dfUnits.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
-        )
-        site.upload_file_sharepoint(
-            localPath + "/Summary/",
-            f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
-            fileName,
-            url_shrpt,
-        )
+    df = pd.read_excel(sourcePath + "/" + final).to_csv(
+        localPath + f"/Summary/{fileName}", index=False
+    )
+    # Save the cleaned and processed DataFrame to a CSV file
+    print(f"save to {localPath}/Summary/{fileName}")
+
+    print(
+        f"***\n upload {fileName}: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
+    )
+    site.upload_file_sharepoint(
+        localPath + "/Summary/",
+        f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
+        fileName,
+        url_shrpt,
+    )
 
 
 def MasterData2(folder, fileName):
@@ -191,28 +193,29 @@ def MasterData2(folder, fileName):
         if date_time_obj == max(date_time_obj, temp):
             final = f
             temp = date_time_obj
-        print(f"final {final}")
+    print(f"final {final}")
 
-        dfUnits = pd.read_excel(sourcePath + "/" + final)
-        # Save the cleaned and processed DataFrame to a CSV file
-        print(f"save to {localPath}/Summary/{fileName}")
-        dfUnits.to_csv(localPath + f"/Summary/{fileName}", index=False)
-        print(
-            f"***\n upload dfUnits.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
-        )
-        site.upload_file_sharepoint(
-            localPath + "/Summary/",
-            f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
-            fileName,
-            url_shrpt,
-        )
+    df = pd.read_excel(sourcePath + "/" + final).to_csv(
+        localPath + f"/Summary/{fileName}", index=False
+    )
+    # Save the cleaned and processed DataFrame to a CSV file
+    print(f"save to {localPath}/Summary/{fileName}")
+    print(
+        f"***\n upload {fileName}: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
+    )
+    site.upload_file_sharepoint(
+        localPath + "/Summary/",
+        f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
+        fileName,
+        url_shrpt,
+    )
 
 
 ########################
 # begein DAG
 with DAG(
     dag_id="SharepointLoadData",
-    schedule_interval="0 1 * * *",
+    schedule_interval="0 3 * * *",
     # schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, 0, 0, 0, 0, tz="Asia/Bangkok"),
     catchup=False,
@@ -388,8 +391,6 @@ with DAG(
 
         @task(task_id=f"MasterData")
         def MasterData():
-            subFolder = folder_url_shrpt + "/" + subfolder_url_shrpt
-            flist = fileList(folder_url_shrpt + "/" + subfolder_url_shrpt, ctx)
             # %% Get latest Units file
             # Get a list of file paths for files with the specified name pattern in the given directory
             MasterData1("Units", "dfUnits.csv")

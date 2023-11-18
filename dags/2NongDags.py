@@ -4,6 +4,9 @@ import os
 import sys
 import tempfile
 import time
+import pytz
+
+
 from pprint import pprint
 from typing import List
 
@@ -29,6 +32,7 @@ from airflow.utils.task_group import TaskGroup
 import requests
 import pandas as pd
 import datetime as dt
+from datetime import datetime, timezone
 
 
 ##############################################################
@@ -49,8 +53,7 @@ localPath = "/home/nhdminh/airflow"
 ##############################################################
 url = "https://api-production.2nong.vn/v0/products"
 
-noww = dt.date.today()
-print(noww)
+noww = datetime.now(pytz.timezone("Asia/Bangkok")).date()
 # %%
 ctx_auth = AuthenticationContext(url_shrpt)
 if ctx_auth.acquire_token_for_user(username_shrpt, password_shrpt):
@@ -93,6 +96,8 @@ with DAG(
         # Task 1
         @task(task_id=f"get2NongPrice")
         def get2NongPrice():
+            print(noww)
+
             # Gia phan bon: special_id = 2
 
             df = pd.DataFrame()
@@ -123,12 +128,13 @@ with DAG(
             temp = pd.DataFrame(dfList["info"].values.tolist())
             dfList = dfList.drop(columns="info", axis=1).join(temp, rsuffix="_temp")
             print(len(dfList))
+
             print(f"{localPath}/2nong/{noww}_2nong_Product_Price.csv")
             dfList.to_csv(
                 f"{localPath}/2nong/{noww}_2nong_Product_Price.csv", index=False
             )
             print(
-                f"***\n upload dfUnits.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
+                f"***\n upload {noww}_2nong_Product_Price.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
             )
             site.upload_file_sharepoint(
                 f"{localPath}/2nong/",
@@ -161,6 +167,7 @@ with DAG(
                     print("Failed to fetch data from the API")
             df = df.reset_index(drop=True)
             print(len(df))
+
             df.to_csv(f"{noww}_2nong_Goods_Price.csv", index=False)
             dfList = df.explode("info").reset_index(drop=True)
             temp = pd.DataFrame(dfList["info"].values.tolist())
@@ -169,6 +176,9 @@ with DAG(
             print(f"{localPath}/2nong/{noww}_2nong_Goods_Price.csv")
             dfList.to_csv(
                 f"{localPath}/2nong/{noww}_2nong_Goods_Price.csv", index=False
+            )
+            print(
+                f"***\n upload {noww}_2nong_Goods_Price.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
             )
             site.upload_file_sharepoint(
                 f"{localPath}/2nong/",
