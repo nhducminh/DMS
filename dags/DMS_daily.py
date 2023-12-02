@@ -37,58 +37,29 @@ from selenium.webdriver.common.keys import Keys
 
 
 service = Service("/usr/local/bin/chromedriver")  # Adjust the path if needed
-download_path = "/home/nhdminh/airflow/DMSdownload"
+
+download_path = "/home/nhdminh/airflow/DMS_daily"
 noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y%m%d")
-download_path = "/home/nhdminh/airflow/DMSdownload"
 
 try:
     os.mkdir(download_path + "/" + noww)
 except Exception as e:
     print(e)
     pass
+
 download_path = download_path + "/" + noww
 
-end = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y/%m/%d")
-begin = (
-    dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)
-).strftime(format="%Y/%m/%d")
-
+end = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%d/%m/%Y")
+begin = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)).strftime(format="%d/%m/%Y")
 # Set Chrome options for headless mode and download directory
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.binary_location = (
-    "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
-)
+chrome_options.binary_location = "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
 
 # Set the download directory
-chrome_options.add_experimental_option(
-    "prefs", {"download.default_directory": download_path}
-)
-
-
-def download_wait(path_to_downloads):
-    seconds = 0
-    dl_wait = True
-    while dl_wait and seconds < 20:
-        dl_wait = False
-        for fname in os.listdir(path_to_downloads):
-            # if fname.endswith(".xlsx"):
-            #     dl_wait = False
-            #     break
-
-            if fname.endswith("crdownload"):
-                dl_wait = True
-                break
-        seconds += 2
-        time.sleep(2)
-
-        print("Wait", seconds)
-    return seconds
-
-
-# %% def download_wait(path_to_downloads):
+chrome_options.add_experimental_option("prefs", {"download.default_directory": download_path})
 
 
 def download_wait(path_to_downloads):
@@ -128,12 +99,10 @@ def exportMaster(_URL, browser, download_path):
             exportBtn.click()
         time.sleep(2)
 
-        print("Click ID btnExportExcel")
+        print("Click ID exportBtn.text")
         print("Wait to download")
         try:
-            exportBtn.find_element(
-                By.XPATH, "/html/body/div[17]/div[2]/div[4]/a[1]/span"
-            ).click()
+            exportBtn.find_element(By.XPATH, "/html/body/div[17]/div[2]/div[4]/a[1]/span").click()
         except:
             pass
         time.sleep(5)
@@ -148,12 +117,10 @@ def exportMaster(_URL, browser, download_path):
 
 def exportBC(browser, download_path, ID_BC, sub_ID_BC, toDate, ID_toDate, ID_btn_click):
     # Export file
-    print("exportBC")
     _URL = "https://dpm.dmsone.vn/report/list"
     id = "btnExportExcel"
     try:
         browser.get(_URL)
-        print(browser.title)
         time.sleep(1)
 
     except Exception as e:
@@ -164,13 +131,12 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, toDate, ID_toDate, ID_btn
     print(BCMenu.text)
     BCMenu.find_element(By.TAG_NAME, "ins").click()
     time.sleep(1)
-
-    print(BCMenu.find_element(By.ID, sub_ID_BC).text)
     BCMenu.find_element(By.ID, sub_ID_BC).click()
+    print(BCMenu.find_element(By.ID, sub_ID_BC).text)
     time.sleep(2)
 
     ReportCtnSection = browser.find_element(By.CLASS_NAME, "ReportCtnSection")
-
+    print(f"{begin}=>{end}")
     fromdate = ReportCtnSection.find_element(By.ID, toDate)
     fromdate.click()
     fromdate.send_keys(begin)
@@ -198,9 +164,7 @@ def exportUnits(browser, download_path):
     # ResetList FixFloat BreadcrumbList
     browser.get(_URL)
     time.sleep(2)
-    print(
-        browser.find_element(By.CSS_SELECTOR, ".ResetList.FixFloat.BreadcrumbList").text
-    )
+    print(browser.find_element(By.CSS_SELECTOR, ".ResetList.FixFloat.BreadcrumbList").text)
     exportBtn = browser.find_element(By.ID, "collapseTab")
     exportBtn.click()
     print("click collapseTab")
@@ -208,7 +172,7 @@ def exportUnits(browser, download_path):
     print("Export Units")
     exportBtn = browser.find_element(By.ID, "tabActive1")
     exportBtn.click()
-    print("click tabActive1")
+    print(f"click  {exportBtn.text}")
     time.sleep(2)
 
     exportBtn = browser.find_element(By.ID, "btnSearchShop")
@@ -224,7 +188,7 @@ def exportUnits(browser, download_path):
     print("Export NVTT")
     exportBtn = browser.find_element(By.ID, "tabActive2")
     exportBtn.click()
-    print("click tabActive2")
+    print(f"click  {exportBtn.text}")
     time.sleep(2)
 
     exportBtn = browser.find_element(By.ID, "btnSearchStaff")
@@ -288,6 +252,7 @@ with DAG(
         # Task 1
         @task(task_id=f"DMS_export_daily")
         def DMS_export_daily():
+            print(f"{begin} => {end}")
             browser = webdriver.Chrome(service=service, options=chrome_options)
             login(browser)
             exportUnits(browser, download_path)
@@ -320,7 +285,7 @@ with DAG(
                 "btnReport",
             )
 
-        LoadSharePointFile = DMS_export_daily()
+        DMS_export_daily = DMS_export_daily()
 
     # end = EmptyOperator(task_id="end")
     # start >> printLog >> section_1 >> end

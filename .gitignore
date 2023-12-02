@@ -6,8 +6,10 @@ Units/
 Thong_Tin_San_Pham/
 dags/__pycache__/
 .gitignore
-2nong/
+2nong/2nong_price/
 Summary/
-DMSdownload/
 x.py
 Selenium copy.py
+DMS_DOWNLOAD/
+TinTongHop.log
+DMS_daily/

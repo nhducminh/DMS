@@ -57,13 +57,9 @@ def print_folder_contents(ctx, folder_url, type):
         folder = ctx.web.get_folder_by_server_relative_url(folder_url)
         fold_names = []
         if type == "file":
-            sub_folders = (
-                folder.files
-            )  # Replace files with folders for getting list of folders
+            sub_folders = folder.files  # Replace files with folders for getting list of folders
         else:
-            sub_folders = (
-                folder.folders
-            )  # Replace folders with files for getting list of folders
+            sub_folders = folder.folders  # Replace folders with files for getting list of folders
 
         ctx.load(sub_folders)
         ctx.execute_query()
@@ -111,7 +107,7 @@ password_shrpt = "a3671c389"
 folder_url_shrpt = "/sites/DMSTNB/Shared%20Documents"
 # subfolder_url_shrpt = "Báo cáo - DMS/Daily"
 subfolder_url_shrpt = "Báo cáo - DMS"
-localPath = "/home/nhdminh/airflow"
+localPath = "/home/nhdminh/airflow/DMS_DOWNLOAD"
 ##############################################################
 
 # %%
@@ -158,15 +154,11 @@ def MasterData1(folder, fileName):
             temp = date_time_obj
     print(f"final {final}")
 
-    df = pd.read_excel(sourcePath + "/" + final).to_csv(
-        localPath + f"/Summary/{fileName}", index=False
-    )
+    df = pd.read_excel(sourcePath + "/" + final).to_csv(localPath + f"/Summary/{fileName}", index=False)
     # Save the cleaned and processed DataFrame to a CSV file
     print(f"save to {localPath}/Summary/{fileName}")
 
-    print(
-        f"***\n upload {fileName}: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
-    )
+    print(f"***\n upload {fileName}: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}")
     site.upload_file_sharepoint(
         localPath + "/Summary/",
         f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
@@ -195,14 +187,10 @@ def MasterData2(folder, fileName):
             temp = date_time_obj
     print(f"final {final}")
 
-    df = pd.read_excel(sourcePath + "/" + final).to_csv(
-        localPath + f"/Summary/{fileName}", index=False
-    )
+    df = pd.read_excel(sourcePath + "/" + final).to_csv(localPath + f"/Summary/{fileName}", index=False)
     # Save the cleaned and processed DataFrame to a CSV file
     print(f"save to {localPath}/Summary/{fileName}")
-    print(
-        f"***\n upload {fileName}: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
-    )
+    print(f"***\n upload {fileName}: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}")
     site.upload_file_sharepoint(
         localPath + "/Summary/",
         f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
@@ -265,9 +253,7 @@ with DAG(
                     filename = f[str.rfind(f, "/") + 1 :]
 
                     if str.find(f, folder) > -1:
-                        site.download_file_sharepoint(
-                            foldername, f"{localPath}/{folder}", filename, url_shrpt
-                        )
+                        site.download_file_sharepoint(foldername, f"{localPath}/{folder}", filename, url_shrpt)
                         print(f"{localPath}/{folder}/{filename}")
 
         LoadSharePointFile = LoadSharePointFile()
@@ -308,9 +294,7 @@ with DAG(
             print(f"save to {localPath} /dfVTKHC2.csv")
             dfVTKHC2.to_csv(localPath + "/Summary/dfVTKHC2.csv", index=False)
 
-            print(
-                f"***\n upload dfVTKHC2.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
-            )
+            print(f"***\n upload dfVTKHC2.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}")
             site.upload_file_sharepoint(
                 localPath + "/Summary/",
                 f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
@@ -346,40 +330,24 @@ with DAG(
             dfDonHang = dfDonHang.drop_duplicates(subset=["Số đơn hàng", "Trạng Thái"])
 
             # Replace specific values in the 'Khu vực' column
-            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace(
-                "Khu vực Miền Bắc", "Công ty Miền Bắc"
-            )
-            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace(
-                "Khu vực Miền Trung", "Công ty Miền Trung"
-            )
-            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace(
-                "Khu vực Tây Nam Bộ", "Công ty Tây Nam Bộ"
-            )
-            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace(
-                "Khu vực Đông Nam Bộ", "Công ty Đông Nam Bộ"
-            )
-            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace(
-                "KV Đào tạo 1", "Vùng đào tạo 1"
-            )
+            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace("Khu vực Miền Bắc", "Công ty Miền Bắc")
+            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace("Khu vực Miền Trung", "Công ty Miền Trung")
+            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace("Khu vực Tây Nam Bộ", "Công ty Tây Nam Bộ")
+            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace("Khu vực Đông Nam Bộ", "Công ty Đông Nam Bộ")
+            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace("KV Đào tạo 1", "Vùng đào tạo 1")
 
             # Filter rows where the 'Khu vực' column is not equal to 'Vùng đào tạo 1'
             filter = dfDonHang["Khu vực"] == "Vùng đào tạo 1"
             dfDonHang = dfDonHang[~filter]
 
             # Convert the 'Ngày đặt hàng' and 'Ngày giao hàng' columns to datetime format
-            dfDonHang["Ngày đặt hàng"] = pd.to_datetime(
-                dfDonHang["Ngày đặt hàng"], format="%d/%m/%Y"
-            )
-            dfDonHang["Ngày giao hàng"] = pd.to_datetime(
-                dfDonHang["Ngày giao hàng"], format="%d/%m/%Y"
-            )
+            dfDonHang["Ngày đặt hàng"] = pd.to_datetime(dfDonHang["Ngày đặt hàng"], format="%d/%m/%Y")
+            dfDonHang["Ngày giao hàng"] = pd.to_datetime(dfDonHang["Ngày giao hàng"], format="%d/%m/%Y")
 
             # Save the cleaned and processed DataFrame to a CSV file
             print(f"save to {localPath}/Summary/dfDonHang.csv")
             dfDonHang.to_csv(localPath + "/Summary/dfDonHang.csv", index=False)
-            print(
-                f"***\n upload dfDonHang.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
-            )
+            print(f"***\n upload dfDonHang.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}")
             site.upload_file_sharepoint(
                 localPath + "/Summary/",
                 f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
@@ -391,6 +359,10 @@ with DAG(
 
         @task(task_id=f"MasterData")
         def MasterData():
+            try:
+                os.mkdir(os.path.join(localPath, "Summary"))
+            except:
+                pass
             # %% Get latest Units file
             # Get a list of file paths for files with the specified name pattern in the given directory
             MasterData1("Units", "dfUnits.csv")
