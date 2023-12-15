@@ -49,7 +49,7 @@ password_shrpt = "a3671c389"
 folder_url_shrpt = "/sites/DMSTNB/Shared%20Documents"
 # subfolder_url_shrpt = "Báo cáo - DMS/Daily"
 subfolder_url_shrpt = "Báo cáo - DMS"
-localPath = "/home/nhdminh/airflow"
+localPath = "/home/nhdminh/airflow/2nong_price"
 ##############################################################
 url = "https://api-production.2nong.vn/v0/products"
 
@@ -130,9 +130,7 @@ with DAG(
             print(len(dfList))
 
             print(f"{localPath}/2nong/{noww}_2nong_Product_Price.csv")
-            dfList.to_csv(
-                f"{localPath}/2nong/{noww}_2nong_Product_Price.csv", index=False
-            )
+            dfList.to_csv(f"{localPath}/2nong/{noww}_2nong_Product_Price.csv", index=False)
             print(
                 f"***\n upload {noww}_2nong_Product_Price.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
             )
@@ -174,12 +172,8 @@ with DAG(
             dfList = dfList.drop(columns="info", axis=1).join(temp, rsuffix="_temp")
             print(len(dfList))
             print(f"{localPath}/2nong/{noww}_2nong_Goods_Price.csv")
-            dfList.to_csv(
-                f"{localPath}/2nong/{noww}_2nong_Goods_Price.csv", index=False
-            )
-            print(
-                f"***\n upload {noww}_2nong_Goods_Price.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
-            )
+            dfList.to_csv(f"{localPath}/2nong/{noww}_2nong_Goods_Price.csv", index=False)
+            print(f"***\n upload {noww}_2nong_Goods_Price.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}")
             site.upload_file_sharepoint(
                 f"{localPath}/2nong/",
                 f"{folder_url_shrpt}/{subfolder_url_shrpt}/2Nong",

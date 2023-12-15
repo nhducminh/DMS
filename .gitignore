@@ -6,7 +6,7 @@ Units/
 Thong_Tin_San_Pham/
 dags/__pycache__/
 .gitignore
-2nong/2nong_price/
+2nong_price/2nong/
 Summary/
 x.py
 Selenium copy.py

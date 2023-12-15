@@ -6,14 +6,12 @@ import shutil
 import numpy as np
 import openpyxl
 import pandas as pd
-import win32com.client as win32
 import xlsxwriter
 import xlwings as xw
 import sys
 
 print(sys.getdefaultencoding())
 
-win32c = win32.constants
 now = dt.datetime.now()
 print(os.popen("taskkill /f /t /im EXCEL.exe").read())
 print(os.popen("Taskkill /f /im onedrive.exe").read())
@@ -355,9 +353,7 @@ tDate = toDate[0:2] + "/" + toDate[2:4] + "/" + toDate[4:]
 dfVTKHC2.columns = dfVTKHC2.columns.str.strip()
 filter = dfVTKHC2.loc[:, "Miền"].str.contains("đào tạo", case=False)
 dfVTKHC2 = dfVTKHC2[~filter]
-
 dsMienGheTham = list(dfVTKHC2.loc[:, ["Miền"]].drop_duplicates().reset_index().drop(columns="index")["Miền"])
-dsMienDonHang = list(dfDuLieuDonHang.loc[:, ["Miền"]].drop_duplicates().reset_index().drop(columns="index")["Miền"])
 
 
 for Mien in dsMienGheTham:
@@ -371,6 +367,7 @@ for Mien in dsMienGheTham:
 dfDuLieuDonHang.columns = dfDuLieuDonHang.columns.str.strip()
 filter = dfDuLieuDonHang.loc[:, "Khu vực"].str.contains("đào tạo", case=False)
 dfDuLieuDonHang = dfDuLieuDonHang[~filter]
+dsMienDonHang = list(dfDuLieuDonHang.loc[:, ["Miền"]].drop_duplicates().reset_index().drop(columns="index")["Miền"])
 
 for Mien in dsMienDonHang:
     # Xuất báo cáo chi tiết
@@ -405,110 +402,3 @@ for NVTT in dsNVTTGheTHam:
     sheet_name = "BaocaoGheThamC2"
     dfExport = dfVTKHC2[filter]
     BCGheThamC2(dfExport, file_name, sheet_name, reportFolder)
-
-
-# # %% Báo cáo GSBH
-# # Miền
-# # gui email
-# outlook = win32.Dispatch("outlook.application")
-# file_list = []
-# for f in os.listdir(reportFolder + "\\GSBH"):
-#     file_list.append(f)
-
-# for i in range(0, len(GSBH_CTVM)):
-#     print("GSBH_" + GSBH_CTVM.loc[i, "Miền"] + ".xlsx")
-
-# GSBH_CTVM = GSBH_CTVM.assign(FileName=lambda x: ("GSBH_" + x["Miền"] + ".xlsx"))
-
-# filter = GSBH_CTVM["FileName"].isin(file_list)
-# GSBH_CTVM = GSBH_CTVM[filter]
-
-# for i in range(0, len(GSBH_CTVM)):
-#     file_name = reportFolder + "\\GSBH\\" + GSBH_CTVM.loc[i, "FileName"]
-#     file_name = os.path.abspath(file_name)
-#     # Nhân sự
-#     Subject = "[DMS][GSBH] Báo cáo hệ thống DMS từ ngày " + tDate + " đến ngày " + fDate
-#     HTMLBody = (
-#         "<h2> Kính gửi anh/chị "
-#         + GSBH_CTVM.loc[i, "Nhân sự"]
-#         + "</h2></br>Tổ DMS kính gửi anh/chị báo cáo hệ thống DMS từ ngày "
-#         + fDate
-#         + " đến ngày "
-#         + tDate
-#         + " tại "
-#         + GSBH_CTVM.loc[i, "Miền"]
-#     )
-
-#     signature = """
-#             </br>
-#             <p>Tr&acirc;n trọng.</p>
-#             <p>--------------------------------------------------------</p>
-#             <p>Nguyễn Ho&agrave;ng Đức Minh (Mr.) - Chuy&ecirc;n vi&ecirc;n Ban Tiếp thị v&agrave; Truyền th&ocirc;ng</p>
-#             <p>Tổng c&ocirc;ng ty Ph&acirc;n b&oacute;n v&agrave; H&oacute;a chất Dầu kh&iacute; (PVFCCo)&nbsp;</p>
-#             <p>PVFCCo Tower, 43 Mạc Đĩnh Chi, P. Đakao, Q. 1, Tp. Hồ Ch&iacute; Minh</p>
-#             <p>SĐT: 028.3825.6258 &nbsp;Di động: 0935.396.887</p>
-#             <p>Website: <a href="http://www.dpm.vn/">www.dpm.vn</a></p>
-#             """
-#     mail = outlook.CreateItem(0)
-#     mail.To = "nhdminh@pvfcco.com.vn"
-#     email_to = GSBH_CTVM.loc[i, "Email"]
-#     mail.To = email_to
-#     mail.CC = "nhdminh@pvfcco.com.vn"
-#     mail.Subject = Subject
-#     mail.HTMLBody = HTMLBody + signature
-#     # To attach a file to the email (optional):
-#     try:
-#         mail.Attachments.Add(file_name)
-#         #   mail.Send()
-#         print("đã gửi email tới\n", file_name, email_to)
-#     except:
-#         pass
-
-
-# %%
-# # print(os.popen("C:\\Program Files\\Microsoft OneDrive\\OneDrive.exe").read())
-# outlook = win32.Dispatch('outlook.application')
-
-# for ff in os.listdir(reportFolder + "\\NVTT"):
-#     email = ff[5:ff.find('.xlsx')].lower()+"@pvfcco.com.vn"
-
-#     if ff[5:ff.find('.xlsx')].lower() =="nhlam":
-#         email = ff[5:ff.find('.xlsx')].lower()+"01@pvfcco.com.vn"
-#     if ff[5:ff.find('.xlsx')].lower() =="dhquan":
-#         email = ff[5:ff.find('.xlsx')].lower()+".sbd@pvfcco.com.vn"
-
-
-#     filename = os.path.abspath(f'{reportFolder}\\NVTT\\{ff}')
-#     # print(filename)
-#     Subject = '[DMS][NVTT] Báo cáo hệ thống DMS từ ngày ' + tDate + ' đến ngày '+ fDate
-#     HTMLBody = '<h2> Kính gửi anh/chị '+ ff[5:ff.find('.xlsx')] +\
-#                 '</h2></br>Tổ DMS kính gửi anh/chị báo cáo hệ thống DMS từ ngày ' + fDate + ' đến ngày '+ tDate
-
-#     signature = '''
-#                 </br>
-#                 <p>Tr&acirc;n trọng.</p>
-#                 <p>--------------------------------------------------------</p>
-#                 <p>Nguyễn Ho&agrave;ng Đức Minh (Mr.) - Chuy&ecirc;n vi&ecirc;n Ban Tiếp thị v&agrave; Truyền th&ocirc;ng</p>
-#                 <p>Tổng c&ocirc;ng ty Ph&acirc;n b&oacute;n v&agrave; H&oacute;a chất Dầu kh&iacute; (PVFCCo)&nbsp;</p>
-#                 <p>PVFCCo Tower, 43 Mạc Đĩnh Chi, P. Đakao, Q. 1, Tp. Hồ Ch&iacute; Minh</p>
-#                 <p>SĐT: 028.3825.6258 &nbsp;Di động: 0935.396.887</p>
-#                 <p>Website: <a href="http://www.dpm.vn/">www.dpm.vn</a></p>
-#                 '''
-#     mail = outlook.CreateItem(0)
-#     # mail.To = "nhdminh@pvfcco.com.vn"
-#     mail.To = email
-#     # mail.CC = "nhdminh@pvfcco.com.vn"
-#     mail.Subject = Subject
-#     mail.HTMLBody = HTMLBody +signature
-#     # To attach a file to the email (optional):
-#     try:
-#         mail.Attachments.Add(filename)
-#         # mail.Send()
-#         print("đã gửi email tới",filename,email)
-#     except Exception as e:
-#         print(f"Có lỗi khi gửi email tới\n",filename,email)
-#         print(e)
-#         pass
-
-
-# %%
