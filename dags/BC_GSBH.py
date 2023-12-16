@@ -24,8 +24,11 @@ print(os.popen("Taskkill /f /im onedrive.exe").read())
 noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y%m%d")
 toDate = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%d/%m/%Y")
 fromDate = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)).strftime(format="%d/%m/%Y")
-dailyFolder = r"/home/nhdminh/airflow/DMS_daily"
+parent_path = os.path.abspath(os.path.join(os.path.abspath(""), os.pardir))
+dailyFolder = f"/home/nhdminh/DMS/DMS_daily"
+print(dailyFolder)
 reportFolder = os.path.abspath(os.path.join(dailyFolder, noww))
+print(reportFolder)
 row_start = 5
 col_start = 0
 
@@ -133,9 +136,10 @@ def BCGheThamC2(dfExport, file_name, sheet_name, reportFolder):
     try:
         Workbook = openpyxl.load_workbook(file_name)
     except Exception as e:
+        print(e)
         Workbook = openpyxl.Workbook()
         Workbook.save(file_name)
-        print(e)
+        print(f"Create file {file_name}")
 
     if sheet_name in Workbook.sheetnames:
         Workbook.remove(Workbook[sheet_name])
@@ -248,6 +252,7 @@ def BCDonHangC2(dfExport, file_name, sheet_name, reportFolder):
     except:
         Workbook = openpyxl.Workbook()
         Workbook.save(file_name)
+        print(f"Create file {file_name}")
 
     if sheet_name in Workbook.sheetnames:
         Workbook.remove(Workbook[sheet_name])
@@ -321,14 +326,13 @@ def BCDonHangC2(dfExport, file_name, sheet_name, reportFolder):
 # %%
 # GetData from reportFolder
 for f in os.listdir(reportFolder):
-    print(f)
     if f.find("Bao_cao_chi_tiet_VTKHC2") > -1:
         dfVTKHC2 = pd.read_excel(os.path.join(reportFolder, f), engine="openpyxl")
         dfVTKHC2 = dfVTKHC2[3:].reset_index().drop(columns={"index"})
         dfVTKHC2.columns = dfVTKHC2.loc[0]
         dfVTKHC2 = dfVTKHC2.loc[1:]
         dfVTKHC2 = dfVTKHC2.drop(columns="STT")
-        dfVTKHC2.to_csv("dfVTKHC2.csv", index=False)
+        # dfVTKHC2.to_csv("dfVTKHC2.csv", index=False)
 
     if f.find("Bao_cao_du_lieu_don_hang") > -1:
         dfDuLieuDonHang = pd.read_excel(os.path.join(reportFolder, f), engine="openpyxl")
@@ -336,7 +340,7 @@ for f in os.listdir(reportFolder):
         dfDuLieuDonHang.columns = dfDuLieuDonHang.loc[0]
         dfDuLieuDonHang = dfDuLieuDonHang.loc[1:]
         dfDuLieuDonHang = dfDuLieuDonHang.drop(columns="STT")
-        dfDuLieuDonHang.to_csv("dfDuLieuDonHang.csv", index=False)
+        # dfDuLieuDonHang.to_csv("dfDuLieuDonHang.csv", index=False)
 
 
 # %%
@@ -355,17 +359,21 @@ for Mien in dsMienGheTham:
     try:
         os.mkdir(f"{reportFolder}/{Mien}")
     except Exception as e:
+        print(e)
         pass
 
     try:
         os.mkdir(f"{reportFolder}/{Mien}/GSBH")
     except Exception as e:
+        print(e)
         pass
 
     file_name = os.path.abspath(os.path.join(folderGSBH, "GSBH_" + Mien + ".xlsx"))
     # Xuất báo cáo chi tiết
     sheet_name = "BaocaoGheThamC2"
     dfExport = dfVTKHC2[filter]
+    print(f"file_name {file_name}\n")
+
     BCGheThamC2(dfExport, file_name, sheet_name, reportFolder)
 
 
