@@ -13,3 +13,5 @@ Selenium copy.py
 DMS_DOWNLOAD/
 TinTongHop.log
 DMS_daily/
+DMSdownload/
+dags/__pycache__/

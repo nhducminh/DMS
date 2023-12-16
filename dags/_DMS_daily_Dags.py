@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import datetime as dt
 import logging
 import os
 import sys
@@ -10,12 +12,14 @@ from typing import List
 import pandas as pd
 import pendulum
 import pysharepoint as ps
-import datetime as dt
 import pytz
-
 from office365.runtime.auth.authentication_context import AuthenticationContext
 from office365.sharepoint.client_context import ClientContext
 from office365.sharepoint.files.file import File
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from sqlalchemy import create_engine
 
 from airflow import DAG
@@ -30,42 +34,42 @@ from airflow.operators.python import (
 from airflow.utils.edgemodifier import Label
 from airflow.utils.task_group import TaskGroup
 
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-
-
 service = Service("/usr/local/bin/chromedriver")  # Adjust the path if needed
-
-download_path = "/home/nhdminh/airflow/DMS_daily"
+download_path = "/home/nhdminh/airflow/DMSdownload"
 noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y%m%d")
+download_path = "/home/nhdminh/airflow/DMSdownload"
 
 try:
     os.mkdir(download_path + "/" + noww)
 except Exception as e:
     print(e)
     pass
-
 download_path = download_path + "/" + noww
 
 end = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%d/%m/%Y")
-begin = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)).strftime(format="%d/%m/%Y")
+begin = (
+    dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)
+).strftime(format="%d/%m/%Y")
+
 # Set Chrome options for headless mode and download directory
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.binary_location = "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
+chrome_options.binary_location = (
+    "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
+)
 
 # Set the download directory
-chrome_options.add_experimental_option("prefs", {"download.default_directory": download_path})
+chrome_options.add_experimental_option(
+    "prefs", {"download.default_directory": download_path}
+)
 
 
 def download_wait(path_to_downloads):
     seconds = 0
     dl_wait = True
-    while dl_wait and seconds < 30:
+    while dl_wait and seconds < 20:
         dl_wait = False
         for fname in os.listdir(path_to_downloads):
             # if fname.endswith(".xlsx"):
@@ -80,6 +84,9 @@ def download_wait(path_to_downloads):
 
         print("Wait", seconds)
     return seconds
+
+
+# %% def download_wait(path_to_downloads):
 
 
 # %% def exportMaster(_URL,browser, download_path):
@@ -99,10 +106,12 @@ def exportMaster(_URL, browser, download_path):
             exportBtn.click()
         time.sleep(2)
 
-        print("Click ID exportBtn.text")
+        print("Click ID btnExportExcel")
         print("Wait to download")
         try:
-            exportBtn.find_element(By.XPATH, "/html/body/div[17]/div[2]/div[4]/a[1]/span").click()
+            exportBtn.find_element(
+                By.XPATH, "/html/body/div[17]/div[2]/div[4]/a[1]/span"
+            ).click()
         except:
             pass
         time.sleep(5)
@@ -119,7 +128,6 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, toDate, ID_toDate, ID_btn
     # Export file
     _URL = "https://dpm.dmsone.vn/report/list"
     id = "btnExportExcel"
-
     try:
         browser.get(_URL)
         time.sleep(1)
@@ -128,25 +136,13 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, toDate, ID_toDate, ID_btn
         print(e)
         return -1
         pass
-
-    trytofind = True
-    count = 0
-    while trytofind:
-        try:
-            BCMenu = browser.find_element(By.ID, ID_BC)
-            print(BCMenu.text)
-            BCMenu.find_element(By.TAG_NAME, "ins").click()
-            time.sleep(1)
-            BCMenu.find_element(By.ID, sub_ID_BC).click()
-            print(BCMenu.find_element(By.ID, sub_ID_BC).text)
-            time.sleep(2)
-            trytofind = False
-        except:
-            time.sleep(2)
-            count += 1
-            print(f"try {count}")
-            if count == 10:
-                trytofind = False
+    BCMenu = browser.find_element(By.ID, ID_BC)
+    print(BCMenu.text)
+    BCMenu.find_element(By.TAG_NAME, "ins").click()
+    time.sleep(1)
+    BCMenu.find_element(By.ID, sub_ID_BC).click()
+    print(BCMenu.find_element(By.ID, sub_ID_BC).text)
+    time.sleep(2)
 
     ReportCtnSection = browser.find_element(By.CLASS_NAME, "ReportCtnSection")
     print(f"{begin}=>{end}")
@@ -177,7 +173,9 @@ def exportUnits(browser, download_path):
     # ResetList FixFloat BreadcrumbList
     browser.get(_URL)
     time.sleep(2)
-    print(browser.find_element(By.CSS_SELECTOR, ".ResetList.FixFloat.BreadcrumbList").text)
+    print(
+        browser.find_element(By.CSS_SELECTOR, ".ResetList.FixFloat.BreadcrumbList").text
+    )
     exportBtn = browser.find_element(By.ID, "collapseTab")
     exportBtn.click()
     print("click collapseTab")
@@ -185,7 +183,7 @@ def exportUnits(browser, download_path):
     print("Export Units")
     exportBtn = browser.find_element(By.ID, "tabActive1")
     exportBtn.click()
-    print(f"click  {exportBtn.text}")
+    print("click tabActive1")
     time.sleep(2)
 
     exportBtn = browser.find_element(By.ID, "btnSearchShop")
@@ -201,7 +199,7 @@ def exportUnits(browser, download_path):
     print("Export NVTT")
     exportBtn = browser.find_element(By.ID, "tabActive2")
     exportBtn.click()
-    print(f"click  {exportBtn.text}")
+    print("click tabActive2")
     time.sleep(2)
 
     exportBtn = browser.find_element(By.ID, "btnSearchStaff")
@@ -241,11 +239,10 @@ def login(browser):
 
 
 def exportBC_index(browser, Lv1, Lv2):
-    dsBaocao = pd.read_csv("/home/nhdminh/airflow/dags/DSBaoCao.csv")
+    dsBaocao = pd.read_csv("/home/nhdminh/airflow/dags/DSBaocao.csv")
     filterBC1 = dsBaocao["Lv1"] == Lv1
     filterBC2 = dsBaocao["Lv2"] == Lv2
     BC = dsBaocao[filterBC1 * filterBC2].reset_index(drop=True).to_dict()
-    print(*BC)
     exportBC(
         browser,
         download_path,
@@ -255,13 +252,17 @@ def exportBC_index(browser, Lv1, Lv2):
         BC["toDate"][0],
         BC["ID_btn_click"][0],
     )
+    # filecontent
+    # C:\Users\nhducminh\Downloads\
+    print(BC["filecontent"][0])
+    download_wait(download_path)
 
 
 # %%
 ########################
 # begein DAG
 with DAG(
-    dag_id="DMS_export_daily_Dags",
+    dag_id="DMS_export_daily_Dags_Disable",
     # schedule_interval="0 */6 * * *",
     schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, tz="UTC"),
@@ -278,16 +279,10 @@ with DAG(
         return "Whatever you return gets printed in the logs"
 
     printLog = print_context()
-    with TaskGroup("section_0", tooltip="Tasks for Load Data") as section_0:
-        RunPythonScript = BashOperator(
-            task_id="Remove_Exist_File",
-            bash_command=f"rm -r {download_path}",
-        )
     with TaskGroup("section_1", tooltip="Tasks for Load Data") as section_1:
         # Task 1
         @task(task_id=f"DMS_export_daily")
         def DMS_export_daily():
-            print(f"{begin} => {end}")
             browser = webdriver.Chrome(service=service, options=chrome_options)
             login(browser)
             exportUnits(browser, download_path)
@@ -301,16 +296,11 @@ with DAG(
                 browser,
                 download_path,
             )
-            exportBC_index(browser, 1, 1)
             exportBC_index(browser, 7, 3)
             exportBC_index(browser, 10, 1)
 
-        DMS_export_daily = DMS_export_daily()
+        LoadSharePointFile = DMS_export_daily()
 
-    with TaskGroup("section_2", tooltip="Tasks for Load Data") as section_2:
-        RunPythonScript = BashOperator(
-            task_id="cleanData",
-            bash_command="/bin/python3 '/home/nhdminh/airflow/Bao cao DMS/BC_GSBH.py'",
-        )
-    start >> printLog >> section_0 >> section_1 >> section_2
-    # start >> printLog >> section_1 >> section_2
+    # end = EmptyOperator(task_id="end")
+    # start >> printLog >> section_1 >> end
+    start >> printLog >> section_1
