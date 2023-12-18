@@ -16,3 +16,4 @@ DMS_daily/
 DMSdownload/
 dags/__pycache__/
 2nong_price/
+dags/__pycache__/sharepointDMSLoadData.cpython-310.pyc

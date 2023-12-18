@@ -270,8 +270,8 @@ def exportBC_index(browser, Lv1, Lv2):
 # begein DAG
 with DAG(
     dag_id="DMS_export_daily_Dags_home",
-    # schedule_interval="0 */6 * * *",
-    schedule="@daily",
+    schedule_interval="30 23 * * *",
+    # schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, tz="UTC"),
     catchup=False,
     tags=["example"],
@@ -316,10 +316,5 @@ with DAG(
 
         DMS_export_daily = DMS_export_daily()
 
-    with TaskGroup("section_2", tooltip="Tasks for Load Data") as section_2:
-        RunPythonScript = BashOperator(
-            task_id="cleanData",
-            bash_command="/bin/python3 '/home/nhdminh/DMS/dags/BC_GSBH.py'",
-        )
-    start >> printLog >> section_0 >> section_1 >> section_2
-    # start >> printLog >> section_1 >> section_2
+
+    start >> printLog >> section_0 >> section_1 
