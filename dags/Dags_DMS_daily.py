@@ -198,12 +198,13 @@ def exportUnits(browser):
 
     exportBtn = browser.find_element(By.ID, "btnSearchShop")
     exportBtn.click()
-    print("click btnSearchShop")
+    print("click btnSearchShop => tim kiem don vi")
+    
     time.sleep(2)
     parentElement = browser.find_element(By.ID, "container1")
-    exportBtn = parentElement.find_element(By.ID, "btnExport")
+    exportBtn = parentElement.find_element(By.ID, "btnExportShop")
     exportBtn.click()
-    print("click btnExport")
+    print("click btnExportShop => export don vi")
     time.sleep(5)
 
     print("Export NVTT")
@@ -214,12 +215,12 @@ def exportUnits(browser):
 
     exportBtn = browser.find_element(By.ID, "btnSearchStaff")
     exportBtn.click()
-    print("click btnSearchStaff")
+    print("click btnSearchStaff => tim kiem nhan vien")
     time.sleep(2)
     parentElement = browser.find_element(By.ID, "container2")
     exportBtn = parentElement.find_element(By.ID, "btnExport")
     exportBtn.click()
-    print("click btnExport")
+    print("click btnExport => export nhan vien")
     time.sleep(5)
     download_wait(download_path)
 
@@ -259,9 +260,9 @@ def exportBC_index(browser, Lv1, Lv2):
         download_path,
         BC["ID_BC"][0],
         BC["sub_ID_BC"][0],
-        BC["fromDate"][0],
-        BC["toDate"][0],
-        BC["ID_btn_click"][0],
+        'fromDate',
+        'toDate',
+        'btnReport',
     )
 
 

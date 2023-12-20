@@ -1,6 +1,8 @@
 Lv1,Lv2,Name,ID_BC,sub_ID_BC,fromDate,toDate,ID_btn_click,filecontent
 1,1,,RPT_BC_HO_GS,REPORT_DHPSTN,fromDate,toDate,btnReport
 1,2,,RPT_BC_HO_GS,BCDHHTTC,fromDate,toDate,btnReport
+2,1,REPORT_SLDS,BCSLDSKHC2,,,
+2,2,REPORT_SLDS,BCDSSLBHC1,,,
 7,1,7.1 NVTT - địa bàn quản lý,NVTT,BCDBNVTT,fromDate,toDate,btnReport
 7,2,7.2 Thời gian ghé thăm C2,NVTT,BCGTVTKH,fDate,tDate,btnSearch
 7,3,7.3 Chi tiết thời gian ghé thăm C2,NVTT,BCCTVTKHC2,fromDate,toDate,btnReport,Bao_cao_chi_tiet_VTKHC2
@@ -12,6 +14,6 @@ Lv1,Lv2,Name,ID_BC,sub_ID_BC,fromDate,toDate,ID_btn_click,filecontent
 9,1,9.1 C2 chưa phát sinh doanh số,DLKHC2,BCKHKMH,fromDate,,btnReport
 9,2,9.2 Kết quả khảo sát,DLKHC2,BCKQKS,fromDate,toDate,btnReport
 9,3,9.3 Theo dõi khắc phục,DLKHC2,BCTDKP,fDate,tDate,btnSearch
-10,1,10.1 Dữ liệu đơn hàng,REPORT_BCK,REPORT_SALE_ORDER,fDate,tDate,btnSearch,Bao_cao_du_lieu_don_hang
+10,1,10.1 Dữ liệu đơn hàng,REPORT_BCK,REPORT_SALE_ORDER,fDate,tDate,btnReport,Bao_cao_du_lieu_don_hang
 10,2,"10.2 Nhật ký hoạt động NVTT, GSBH",REPORT_BCK,REPORT_ACC_IPAD,fromDate,toDate,btnReport
 10,3,10.3 Khảo sát giá/tồn kho,REPORT_BCK,BCDOITHU,fromDate,toDate,btnReport
