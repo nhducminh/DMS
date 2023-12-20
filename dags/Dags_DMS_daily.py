@@ -36,7 +36,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 
-parent_path = os.path.abspath(os.path.join(os.path.abspath(''), os.pardir))
+parent_path = os.path.abspath(os.path.join(os.path.abspath(""), os.pardir))
 download_path = f"{os.path.abspath('')}/DMS/DMS_daily"
 
 
@@ -50,9 +50,7 @@ except:
     pass
 
 end = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%d/%m/%Y")
-begin = (
-    dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)
-).strftime(format="%d/%m/%Y")
+begin = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)).strftime(format="%d/%m/%Y")
 
 
 # Define ChromeDriver service
@@ -62,13 +60,10 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.binary_location = (
-    "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
-)
+chrome_options.binary_location = "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
 # Set the download directory
-chrome_options.add_experimental_option(
-    "prefs", {"download.default_directory": download_path}
-)
+chrome_options.add_experimental_option("prefs", {"download.default_directory": download_path})
+
 
 def download_wait(path_to_downloads):
     seconds = 0
@@ -199,7 +194,7 @@ def exportUnits(browser):
     exportBtn = browser.find_element(By.ID, "btnSearchShop")
     exportBtn.click()
     print("click btnSearchShop => tim kiem don vi")
-    
+
     time.sleep(2)
     parentElement = browser.find_element(By.ID, "container1")
     exportBtn = parentElement.find_element(By.ID, "btnExportShop")
@@ -260,9 +255,9 @@ def exportBC_index(browser, Lv1, Lv2):
         download_path,
         BC["ID_BC"][0],
         BC["sub_ID_BC"][0],
-        'fromDate',
-        'toDate',
-        'btnReport',
+        "fromDate",
+        "toDate",
+        "btnReport",
     )
 
 
@@ -292,7 +287,6 @@ with DAG(
             task_id="Remove_Exist_File",
             # bash_command=f"rm -r {download_path}",
             bash_command=f"cd {download_path}",
-
         )
     with TaskGroup("section_1", tooltip="Tasks for Load Data") as section_1:
         # Task 1
@@ -303,19 +297,12 @@ with DAG(
             browser = webdriver.Chrome(service=service, options=chrome_options)
             login(browser)
             exportUnits(browser)
-            exportMaster(
-                "https://dpm.dmsone.vn/catalog_customer_mng/info",
-                browser
-            )
-            exportMaster(
-                "https://dpm.dmsone.vn/catalog/product/infoindex",
-                browser
-            )
+            exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
+            exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
             exportBC_index(browser, 1, 1)
             exportBC_index(browser, 7, 3)
             exportBC_index(browser, 10, 1)
 
         DMS_export_daily = DMS_export_daily()
 
-
-    start >> printLog >> section_0 >> section_1 
+    start >> printLog >> section_0 >> section_1
