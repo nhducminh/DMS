@@ -1,19 +1,29 @@
-Lv1,Lv2,Name,ID_BC,sub_ID_BC,fromDate,toDate,ID_btn_click,filecontent
-1,1,,RPT_BC_HO_GS,REPORT_DHPSTN,fromDate,toDate,btnReport
-1,2,,RPT_BC_HO_GS,BCDHHTTC,fromDate,toDate,btnReport
-2,1,REPORT_SLDS,BCSLDSKHC2,,,
-2,2,REPORT_SLDS,BCDSSLBHC1,,,
-7,1,7.1 NVTT - địa bàn quản lý,NVTT,BCDBNVTT,fromDate,toDate,btnReport
-7,2,7.2 Thời gian ghé thăm C2,NVTT,BCGTVTKH,fDate,tDate,btnSearch
-7,3,7.3 Chi tiết thời gian ghé thăm C2,NVTT,BCCTVTKHC2,fromDate,toDate,btnReport,Bao_cao_chi_tiet_VTKHC2
-7,4,7.4 Sản lượng và doanh số NVTT,NVTT,NEWVNM_BCHO_SLDS1_2,fromDate,toDate,btnReport
-4,1,4.1 Tổng kết chương trình tích lũy,REPORT_CTTL,BCCTTL,fromDate,toDate,btnReport
-4,2,4.2 Chi tiết sản lượng và điểm số tích lũy,REPORT_CTTL,BCCTCTTL,fromDate,toDate,btnReport
-4,3,4.3 Kết quả chấm trưng bày,REPORT_CTTL,CBTDTTCTTLTB,fromDate,toDate,btnReport
-4,4,"4.4 Tiến độ trả thưởng tích lũy, trưng bày",REPORT_CTTL,CBTDTTCTTLTB_NEW,fromDate,toDate,btnReport
-9,1,9.1 C2 chưa phát sinh doanh số,DLKHC2,BCKHKMH,fromDate,,btnReport
-9,2,9.2 Kết quả khảo sát,DLKHC2,BCKQKS,fromDate,toDate,btnReport
-9,3,9.3 Theo dõi khắc phục,DLKHC2,BCTDKP,fDate,tDate,btnSearch
-10,1,10.1 Dữ liệu đơn hàng,REPORT_BCK,REPORT_SALE_ORDER,fDate,tDate,btnReport,Bao_cao_du_lieu_don_hang
-10,2,"10.2 Nhật ký hoạt động NVTT, GSBH",REPORT_BCK,REPORT_ACC_IPAD,fromDate,toDate,btnReport
-10,3,10.3 Khảo sát giá/tồn kho,REPORT_BCK,BCDOITHU,fromDate,toDate,btnReport
+Lv1,Lv2,ID_BC,sub_ID_BC,Name,file_name
+1,1,RPT_BC_HO_GS,REPORT_DHPSTN,1.1 Đơn C2,Bc_Don_hang_phat_sinh_trong_ngay
+1,2,RPT_BC_HO_GS,BCDHHTTC,"1.2 Đơn hủy, trả và từ chối C2"
+2,1,REPORT_SLDS,BCSLDSKHC2,2.1 Sản lượng và doanh số C2
+2,2,REPORT_SLDS,BCDSSLBHC1,2.2 Sản lượng và doanh số C1
+3,1,REPORT_PROMOTION_PROGRAM,REPORT_PROMOTION_PROGRAM_5_1,3.1 Tổng kết khuyến mãi
+3,2,REPORT_PROMOTION_PROGRAM,REPORT_PROMOTION_RESULT_DETAIL,3.2 Chi tiết khuyến mãi
+4,1,REPORT_CTTL,BCCTTL,4.1 Tổng kết chương trình tích lũy
+4,2,REPORT_CTTL,BCCTCTTL,4.2 Chi tiết sản lượng và điểm số tích lũy
+4,3,REPORT_CTTL,CBTDTTCTTLTB,4.3 Kết quả chấm trưng bày
+4,4,REPORT_CTTL,CBTDTTCTTLTB_NEW,"4.4 Tiến độ trả thưởng tích lũy, trưng bày"
+5,1,REPORT_DEBIT,REPORT_CONGNO_CHITIET,5.1. Chi tiết công nợ
+6,1,RPT_BC_HO_KHO,IDP_BCNPP_3_2,6.1 Xuất nhập tồn
+6,2,RPT_BC_HO_KHO,BCCPDCDCK,6.2 Phiếu điều chỉnh và điều chuyển
+6,3,RPT_BC_HO_KHO,DETAIL_INVENTORY,6.3  Chi tiết xuất nhập tồn
+7,1,NVTT,BCDBNVTT,7.1 NVTT - địa bàn quản lý
+7,2,NVTT,BCGTVTKH,7.2 Thời gian ghé thăm C2
+7,3,NVTT,BCCTVTKHC2,7.3 Chi tiết thời gian ghé thăm C2,Bao_cao_chi_tiet_VTKHC2
+7,4,NVTT,NEWVNM_BCHO_SLDS1_2,7.4 Sản lượng và doanh số NVTT
+8,1,REPORT_HUANLUYEN,RPT_TRAINING,8.1 Báo cáo huấn luyện
+9,1,DLKHC2,BCKHKMH,9.1 C2 chưa phát sinh doanh số
+9,2,DLKHC2,BCKQKS,9.2 Kết quả khảo sát
+9,3,DLKHC2,BCTDKP,9.3 Theo dõi khắc phục
+10,1,REPORT_BCK,REPORT_SALE_ORDER,10.1 Dữ liệu đơn hàng,Bao_cao_du_lieu_don_hang
+10,2,REPORT_BCK,REPORT_ACC_IPAD,"10.2 Nhật ký hoạt động NVTT, GSBH"
+10,3,REPORT_BCK,BCDOITHU,10.3 Khảo sát giá/tồn kho
+11,1,REPORT_KPI_VNS,KPI_NVTT_THANG,11.1 KPI NVTT
+11,2,REPORT_KPI_VNS,KPI_GDKV,11.2  KPI GSBH
+11,3,REPORT_KPI_VNS,KPI_NPP,11.3 KPI NPP

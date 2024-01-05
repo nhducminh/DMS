@@ -291,7 +291,7 @@ with DAG(
             dfVTKHC2["Ngày"] = pd.to_datetime(dfVTKHC2["Ngày"], format="%d-%m-%Y")
 
             # Save the cleaned and processed DataFrame to a CSV file
-            print(f"save to {localPath} /dfVTKHC2.csv")
+            print(f"save to {localPath}/Summary/dfVTKHC2.csv")
             dfVTKHC2.to_csv(localPath + "/Summary/dfVTKHC2.csv", index=False)
 
             print(f"***\n upload dfVTKHC2.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}")

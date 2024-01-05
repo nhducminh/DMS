@@ -247,7 +247,7 @@ def exportBC_index(browser, Lv1, Lv2):
     filterBC1 = dsBaocao["Lv1"] == Lv1
     filterBC2 = dsBaocao["Lv2"] == Lv2
     BC = dsBaocao[filterBC1 * filterBC2].reset_index(drop=True).to_dict()
-    print(*BC)
+    print(BC)
     exportBC(
         browser,
         download_path,
@@ -257,6 +257,12 @@ def exportBC_index(browser, Lv1, Lv2):
         "toDate",
         "btnReport",
     )
+    # print((f"{download_path}/{BC['file_name'][0]}"))
+    for f in os.listdir(download_path):
+        if BC["file_name"][0] in f:
+            return 1
+    # not downloaded
+    return 0
 
 
 # %%
@@ -284,7 +290,7 @@ with DAG(
         RunPythonScript = BashOperator(
             task_id="Remove_Exist_File",
             bash_command=f"rm -r {download_path}",
-            bash_command=f"dir   {download_path}",
+            # bash_command=f"dir   {download_path}",
         )
     with TaskGroup("section_1", tooltip="Tasks for Load Data") as section_1:
         # Task 1
@@ -297,9 +303,22 @@ with DAG(
             exportUnits(browser)
             exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
             exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
-            exportBC_index(browser, 1, 1)
-            exportBC_index(browser, 7, 3)
-            exportBC_index(browser, 10, 1)
+
+            n = 2
+            for i in range(0, n):
+                result = exportBC_index(browser, 1, 1)
+                if result == 1:
+                    break
+
+            for i in range(0, n):
+                result = exportBC_index(browser, 7, 3)
+                if result == 1:
+                    break
+
+            for i in range(0, n):
+                result = exportBC_index(browser, 10, 1)
+                if result == 1:
+                    break
 
         DMS_export_daily = DMS_export_daily()
 

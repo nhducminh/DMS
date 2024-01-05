@@ -57,13 +57,9 @@ def print_folder_contents(ctx, folder_url, type):
         folder = ctx.web.get_folder_by_server_relative_url(folder_url)
         fold_names = []
         if type == "file":
-            sub_folders = (
-                folder.files
-            )  # Replace files with folders for getting list of folders
+            sub_folders = folder.files  # Replace files with folders for getting list of folders
         else:
-            sub_folders = (
-                folder.folders
-            )  # Replace folders with files for getting list of folders
+            sub_folders = folder.folders  # Replace folders with files for getting list of folders
 
         ctx.load(sub_folders)
         ctx.execute_query()
@@ -140,7 +136,7 @@ def cleanVTKHC(dft):
 ########################
 # begein DAG
 with DAG(
-    dag_id="SharepointLoadData",
+    dag_id="SharepointLoadDataxxxxxxxxxxxxx",
     # schedule_interval="0 */6 * * *",
     schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, tz="UTC"),
@@ -193,9 +189,7 @@ with DAG(
                     filename = f[str.rfind(f, "/") + 1 :]
 
                     if str.find(f, folder) > -1:
-                        site.download_file_sharepoint(
-                            foldername, f"{localPath}/{folder}", filename, url_shrpt
-                        )
+                        site.download_file_sharepoint(foldername, f"{localPath}/{folder}", filename, url_shrpt)
                         print(f"{localPath}/{folder}/{filename}")
 
         LoadSharePointFile = LoadSharePointFile()
@@ -237,9 +231,7 @@ with DAG(
             print(f"save to {localPath} /dfVTKHC2.csv")
             dfVTKHC2.to_csv(localPath + "/Summary/dfVTKHC2.csv", index=False)
 
-            print(
-                f"***\n upload dfVTKHC2.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
-            )
+            print(f"***\n upload dfVTKHC2.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}")
             site.upload_file_sharepoint(
                 localPath + "/Summary/",
                 f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
@@ -276,40 +268,24 @@ with DAG(
             dfDonHang = dfDonHang.drop_duplicates(subset=["Số đơn hàng", "Trạng Thái"])
 
             # Replace specific values in the 'Khu vực' column
-            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace(
-                "Khu vực Miền Bắc", "Công ty Miền Bắc"
-            )
-            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace(
-                "Khu vực Miền Trung", "Công ty Miền Trung"
-            )
-            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace(
-                "Khu vực Tây Nam Bộ", "Công ty Tây Nam Bộ"
-            )
-            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace(
-                "Khu vực Đông Nam Bộ", "Công ty Đông Nam Bộ"
-            )
-            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace(
-                "KV Đào tạo 1", "Vùng đào tạo 1"
-            )
+            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace("Khu vực Miền Bắc", "Công ty Miền Bắc")
+            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace("Khu vực Miền Trung", "Công ty Miền Trung")
+            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace("Khu vực Tây Nam Bộ", "Công ty Tây Nam Bộ")
+            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace("Khu vực Đông Nam Bộ", "Công ty Đông Nam Bộ")
+            dfDonHang["Khu vực"] = dfDonHang["Khu vực"].str.replace("KV Đào tạo 1", "Vùng đào tạo 1")
 
             # Filter rows where the 'Khu vực' column is not equal to 'Vùng đào tạo 1'
             filter = dfDonHang["Khu vực"] == "Vùng đào tạo 1"
             dfDonHang = dfDonHang[~filter]
 
             # Convert the 'Ngày đặt hàng' and 'Ngày giao hàng' columns to datetime format
-            dfDonHang["Ngày đặt hàng"] = pd.to_datetime(
-                dfDonHang["Ngày đặt hàng"], format="%d/%m/%Y"
-            )
-            dfDonHang["Ngày giao hàng"] = pd.to_datetime(
-                dfDonHang["Ngày giao hàng"], format="%d/%m/%Y"
-            )
+            dfDonHang["Ngày đặt hàng"] = pd.to_datetime(dfDonHang["Ngày đặt hàng"], format="%d/%m/%Y")
+            dfDonHang["Ngày giao hàng"] = pd.to_datetime(dfDonHang["Ngày giao hàng"], format="%d/%m/%Y")
 
             # Save the cleaned and processed DataFrame to a CSV file
             print(f"save to {localPath}/Summary/dfDonHang.csv")
             dfDonHang.to_csv(localPath + "/Summary/dfDonHang.csv", index=False)
-            print(
-                f"***\n upload dfDonHang.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
-            )
+            print(f"***\n upload dfDonHang.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}")
             site.upload_file_sharepoint(
                 localPath + "/Summary/",
                 f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
@@ -332,11 +308,7 @@ with DAG(
                 print(f)
                 if f == "dfUnits.csv":
                     continue
-                T = (
-                    f[len(sourcePath) : len(sourcePath) + 8]
-                    + "T"
-                    + f[len(sourcePath) + 8 : f.find(".")]
-                )
+                T = f[len(sourcePath) : len(sourcePath) + 8] + "T" + f[len(sourcePath) + 8 : f.find(".")]
                 date_time_obj = pd.to_datetime(T, format="ISO8601")
 
                 if date_time_obj == max(date_time_obj, temp):
@@ -348,9 +320,7 @@ with DAG(
             # Save the cleaned and processed DataFrame to a CSV file
             print(f"save to {localPath}/Summary/dfUnits.csv")
             dfUnits.to_csv(localPath + "/Summary/dfUnits.csv", index=False)
-            print(
-                f"***\n upload dfUnits.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}"
-            )
+            print(f"***\n upload dfUnits.csv: {localPath} -> {folder_url_shrpt}/{subfolder_url_shrpt}")
             site.upload_file_sharepoint(
                 localPath + "/Summary/",
                 f"{folder_url_shrpt}/{subfolder_url_shrpt}/Summary",
