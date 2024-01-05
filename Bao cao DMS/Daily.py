@@ -36,8 +36,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 
-service = Service("/usr/local/bin/chromedriver")  # Adjust the path if needed
-
 download_path = "/home/nhdminh/airflow/Bao cao DMS"
 noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y%m%d")
 
@@ -52,12 +50,16 @@ download_path = download_path + "/" + noww
 end = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%d/%m/%Y")
 begin = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)).strftime(format="%d/%m/%Y")
 # Set Chrome options for headless mode and download directory
+
+
+# Define ChromeDriver service
+service = Service("/usr/local/bin/chromedriver")  # Adjust the path if needed
+# Set Chrome options for headless mode and download directory
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.binary_location = "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
-
 # Set the download directory
 chrome_options.add_experimental_option("prefs", {"download.default_directory": download_path})
 

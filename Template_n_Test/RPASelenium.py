@@ -25,16 +25,19 @@ event_handler = LoggingEventHandler()
 observer = Observer()
 observer.schedule(event_handler, path, recursive=True)
 # Define ChromeDriver service
-service = Service("/usr/local/bin/chromedriver")  # Adjust the path if needed
 download_path = "/home/nhdminh/airflow/"
 
+
+service = Service("/usr/local/bin/chromedriver")  # Adjust the path if needed
+
+# Define ChromeDriver service
+service = Service("/usr/local/bin/chromedriver")  # Adjust the path if needed
 # Set Chrome options for headless mode and download directory
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.binary_location = "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
-
 # Set the download directory
 chrome_options.add_experimental_option("prefs", {"download.default_directory": download_path})
 

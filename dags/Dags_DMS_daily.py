@@ -41,8 +41,6 @@ download_path = f"{os.path.abspath('')}/DMS/DMS_daily"
 
 
 noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y%m%d")
-
-
 download_path = download_path + "/" + noww
 try:
     os.mkdir(download_path)
@@ -285,8 +283,8 @@ with DAG(
     with TaskGroup("section_0", tooltip="Tasks for Load Data") as section_0:
         RunPythonScript = BashOperator(
             task_id="Remove_Exist_File",
-            # bash_command=f"rm -r {download_path}",
-            bash_command=f"cd {download_path}",
+            bash_command=f"rm -r {download_path}",
+            bash_command=f"dir   {download_path}",
         )
     with TaskGroup("section_1", tooltip="Tasks for Load Data") as section_1:
         # Task 1
