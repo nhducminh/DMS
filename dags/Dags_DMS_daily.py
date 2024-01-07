@@ -260,8 +260,10 @@ def exportBC_index(browser, Lv1, Lv2):
     # print((f"{download_path}/{BC['file_name'][0]}"))
     for f in os.listdir(download_path):
         if BC["file_name"][0] in f:
+            print(f)
             return 1
     # not downloaded
+    print(0)
     return 0
 
 
