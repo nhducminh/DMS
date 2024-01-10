@@ -276,7 +276,7 @@ with DAG(
     dag_id="DMS_export_daily_Dags_home",
     schedule_interval="30 23 * * *",
     # schedule="@daily",
-    start_date=pendulum.datetime(2023, 10, 30, tz="UTC"),
+    start_date=pendulum.datetime(2023, 10, 30, tz="Asia/Bangkok"),
     catchup=False,
     tags=["example"],
 ) as dag:

@@ -31,9 +31,9 @@ from airflow.utils.task_group import TaskGroup
 # begein DAG
 with DAG(
     dag_id="BC_GSBH_weekly",
-    schedule_interval="40 23 * * 0",
+    schedule_interval="55 23 * * 0",
     # schedule="@daily",
-    start_date=pendulum.datetime(2023, 10, 30, tz="UTC"),
+    start_date=pendulum.datetime(2023, 10, 30, tz="Asia/Bangkok"),
     catchup=False,
     tags=["example"],
 ) as dag:
@@ -53,5 +53,5 @@ with DAG(
             task_id="cleanData",
             bash_command="/bin/python3 '/home/nhdminh/DMS/dags/BC_GSBH.py'",
         )
-    start >> printLog >>  section_2
+    start >> printLog >> section_2
     # start >> printLog >> section_1 >> section_2

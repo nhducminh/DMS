@@ -1,11 +1,7 @@
 import os
 import re
+import pendulum
 
-report_folder = "/home/nhdminh/airflow/DMS_daily"
-pattern = "^\d+$"
 
-for f in sorted(os.listdir(report_folder)):
-    if len(re.findall(pattern, f)) > 0:
-        ff = f
-
-print(ff)
+for tz in pendulum.timezones:
+    print(tz)
