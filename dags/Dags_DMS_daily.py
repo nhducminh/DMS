@@ -308,7 +308,7 @@ with DAG(
             exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
             exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
 
-            n = 2
+            n = 3
             for i in range(0, n):
                 result = exportBC_index(browser, 1, 1)
                 if result == 1:
