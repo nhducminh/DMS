@@ -4,6 +4,7 @@ import os
 import sys
 import tempfile
 import time
+import datetime as dt
 from pprint import pprint
 from typing import List
 
@@ -164,7 +165,7 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, toDate, ID_toDate, ID_btn
 
     btnReport = ReportCtnSection.find_element(By.ID, ID_btn_click)
     btnReport.click()
-    time.sleep(5)
+    time.sleep(10)
 
     download_wait(download_path)
 
@@ -264,6 +265,7 @@ def exportBC_index(browser, Lv1, Lv2):
             return 1
     # not downloaded
     print(0)
+    print(dt.datetime.now())
     return 0
 
 
