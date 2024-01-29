@@ -1,24 +1,19 @@
 from __future__ import annotations
+
+import datetime as dt
+import getpass
 import logging
 import os
 import sys
 import tempfile
 import time
-import datetime as dt
 from pprint import pprint
 from typing import List
 
 import pandas as pd
 import pendulum
 import pysharepoint as ps
-import datetime as dt
 import pytz
-
-from office365.runtime.auth.authentication_context import AuthenticationContext
-from office365.sharepoint.client_context import ClientContext
-from office365.sharepoint.files.file import File
-from sqlalchemy import create_engine
-
 from airflow import DAG
 from airflow.decorators import task
 from airflow.operators.bash import BashOperator
@@ -30,26 +25,32 @@ from airflow.operators.python import (
 )
 from airflow.utils.edgemodifier import Label
 from airflow.utils.task_group import TaskGroup
-
+from office365.runtime.auth.authentication_context import AuthenticationContext
+from office365.sharepoint.client_context import ClientContext
+from office365.sharepoint.files.file import File
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-
+from sqlalchemy import create_engine
 
 parent_path = os.path.abspath(os.path.join(os.path.abspath(""), os.pardir))
 download_path = f"{os.path.abspath('')}/DMS/DMS_daily"
 
-
+# 'rm -r /home/nhdminh/DMS/DMS_daily/20240116'
 noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y%m%d")
-download_path = download_path + "/" + noww
+# download_path = 'download_path' + "/" + noww
+download_path = "/home/nhdminh/DMS/DMS_daily" + "/" + noww
+
 try:
     os.mkdir(download_path)
 except:
     pass
 
 end = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%d/%m/%Y")
-begin = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)).strftime(format="%d/%m/%Y")
+begin = (
+    dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)
+).strftime(format="%d/%m/%Y")
 
 
 # Define ChromeDriver service
@@ -59,9 +60,13 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.binary_location = "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
+chrome_options.binary_location = (
+    "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
+)
 # Set the download directory
-chrome_options.add_experimental_option("prefs", {"download.default_directory": download_path})
+chrome_options.add_experimental_option(
+    "prefs", {"download.default_directory": download_path}
+)
 
 
 def download_wait(path_to_downloads):
@@ -104,7 +109,9 @@ def exportMaster(_URL, browser):
         print("Click ID exportBtn.text")
         print("Wait to download")
         try:
-            exportBtn.find_element(By.XPATH, "/html/body/div[17]/div[2]/div[4]/a[1]/span").click()
+            exportBtn.find_element(
+                By.XPATH, "/html/body/div[17]/div[2]/div[4]/a[1]/span"
+            ).click()
         except:
             pass
         time.sleep(5)
@@ -113,11 +120,12 @@ def exportMaster(_URL, browser):
         pass
     download_wait(download_path)
 
+    # %% def exportBC(browser, download_path,ID_BC,sub_ID_BC,toDate,ID_toDate,ID_btn_click):
 
-# %% def exportBC(browser, download_path,ID_BC,sub_ID_BC,toDate,ID_toDate,ID_btn_click):
 
-
-def exportBC(browser, download_path, ID_BC, sub_ID_BC, toDate, ID_toDate, ID_btn_click):
+def exportBC(
+    browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click
+):
     # Export file
     _URL = "https://dpm.dmsone.vn/report/list"
     id = "btnExportExcel"
@@ -152,7 +160,7 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, toDate, ID_toDate, ID_btn
 
     ReportCtnSection = browser.find_element(By.CLASS_NAME, "ReportCtnSection")
     print(f"{begin}=>{end}")
-    fromdate = ReportCtnSection.find_element(By.ID, toDate)
+    fromdate = ReportCtnSection.find_element(By.ID, ID_fromDate)
     fromdate.click()
     fromdate.send_keys(begin)
 
@@ -179,7 +187,9 @@ def exportUnits(browser):
     # ResetList FixFloat BreadcrumbList
     browser.get(_URL)
     time.sleep(2)
-    print(browser.find_element(By.CSS_SELECTOR, ".ResetList.FixFloat.BreadcrumbList").text)
+    print(
+        browser.find_element(By.CSS_SELECTOR, ".ResetList.FixFloat.BreadcrumbList").text
+    )
     exportBtn = browser.find_element(By.ID, "collapseTab")
     exportBtn.click()
     print("click collapseTab")
@@ -307,6 +317,13 @@ with DAG(
             exportUnits(browser)
             exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
             exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
+
+            # current_user = getpass.getuser()
+            # print("xxx", os.environ.get("USER"))
+
+            # print("Current User:", current_user)
+            # current_folder = os.getcwd()
+            # print("Current User:", current_folder)
 
             n = 3
             for i in range(0, n):
