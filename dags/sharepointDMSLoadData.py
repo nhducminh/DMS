@@ -107,8 +107,13 @@ password_shrpt = "a3671c389"
 folder_url_shrpt = "/sites/DMSTNB/Shared%20Documents"
 # subfolder_url_shrpt = "Báo cáo - DMS/Daily"
 subfolder_url_shrpt = "Báo cáo - DMS"
-localPath = "/home/nhdminh/airflow/DMS_DOWNLOAD"
+localPath = "/home/nhdminh/DMS/DMS_sharepoint"
+try:
+    os.mkdir(localPath)
+except:
+    pass
 ##############################################################
+
 
 # %%
 ###Authentication###For authenticating into your sharepoint site###
