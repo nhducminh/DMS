@@ -50,9 +50,6 @@ noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y
 # download_path = 'download_path' + "/" + noww
 download_path = "/home/nhdminh/DMS/DMS_daily" + "/" + noww
 
-# download_path = 'download_path' + "/" + noww
-download_path = "/home/nhdminh/DMS/DMS_daily" + "/" + noww
-
 try:
     os.mkdir(download_path)
 except:
@@ -72,6 +69,38 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.binary_location = "/usr/bin/google-chrome"  # Replace with the path to the Edge binary
 # Set the download directory
 chrome_options.add_experimental_option("prefs", {"download.default_directory": download_path})
+
+
+##############################################################
+# This will be the URL that points to your sharepoint site.
+# Make sure you change only the parts of the link that start with "Your"
+sharepoint_base_url = "https://pvfcco.sharepoint.com"
+url_shrpt = "https://pvfcco.sharepoint.com/sites/DMSTNB"
+username_shrpt = "nhdminh@pvfcco.com.vn"
+password_shrpt = "a3671c389"
+folder_url_shrpt = "/sites/DMSTNB/Shared%20Documents"
+subfolder_url_shrpt = "Báo cáo - DMS/DMS_daily"
+
+noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y%m%d")
+# download_path = 'download_path' + "/" + noww
+localPath = "/home/nhdminh/DMS/DMS_daily" + "/" + noww
+
+##############################################################
+###Authentication###For authenticating into your sharepoint site###
+ctx_auth = AuthenticationContext(url_shrpt)
+if ctx_auth.acquire_token_for_user(username_shrpt, password_shrpt):
+    ctx = ClientContext(url_shrpt, ctx_auth)
+    web = ctx.web
+    ctx.load(web)
+    ctx.execute_query()
+    print("Authenticated into sharepoint as: ", web.properties["Title"])
+
+else:
+    print(ctx_auth.get_last_error())
+
+site = ps.SPInterface(sharepoint_base_url, username_shrpt, password_shrpt)
+
+#############################
 
 
 def download_wait(path_to_downloads):
@@ -319,20 +348,6 @@ with DAG(
             exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
             exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
 
-            # current_user = getpass.getuser()
-            # print("xxx", os.environ.get("USER"))
-
-            # print("Current User:", current_user)
-            # current_folder = os.getcwd()
-            # print("Current User:", current_folder)
-
-            # current_user = getpass.getuser()
-            # print("xxx", os.environ.get("USER"))
-
-            # print("Current User:", current_user)
-            # current_folder = os.getcwd()
-            # print("Current User:", current_folder)
-
             n = 3
             for i in range(0, n):
                 result = exportBC_index(browser, 1, 1)
@@ -351,4 +366,16 @@ with DAG(
 
         DMS_export_daily = DMS_export_daily()
 
+        @task(task_id=f"Upload_report")
+        def DMS_upload_report():
+            for f in os.listdir(localPath):
+                site.upload_file_sharepoint(
+                    localPath,
+                    f"{folder_url_shrpt}/{subfolder_url_shrpt}/{noww}",
+                    f,
+                    url_shrpt,
+                )
+
+        DMS_upload_report = DMS_upload_report()
+        DMS_export_daily >> DMS_upload_report
     start >> printLog >> section_0 >> section_1
