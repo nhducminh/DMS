@@ -258,7 +258,11 @@ with DAG(
                     filename = f[str.rfind(f, "/") + 1 :]
 
                     if str.find(f, folder) > -1:
-                        site.download_file_sharepoint(foldername, f"{localPath}/{folder}", filename, url_shrpt)
+                        try:
+                            site.download_file_sharepoint(foldername, f"{localPath}/{folder}", filename, url_shrpt)
+                        except:
+                            print(f"Download fail {filename}")
+                            pass
                         print(f"{localPath}/{folder}/{filename}")
 
         LoadSharePointFile = LoadSharePointFile()

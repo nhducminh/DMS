@@ -52,8 +52,11 @@ try:
 except:
     pass
 
+deltadate = 14
 end = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%d/%m/%Y")
-begin = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)).strftime(format="%d/%m/%Y")
+begin = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=deltadate)).strftime(
+    format="%d/%m/%Y"
+)
 
 
 # Define ChromeDriver service
@@ -152,7 +155,7 @@ def exportMaster(_URL, browser):
 
 def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click):
     # Export file
-    print(download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click)
+    print(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click)
     _URL = "https://dpm.dmsone.vn/report/list"
     id = "btnExportExcel"
 
@@ -173,7 +176,8 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, I
             print(BCMenu.text)
             BCMenu.find_element(By.TAG_NAME, "ins").click()
             time.sleep(1)
-            BCMenu.find_element(By.ID, sub_ID_BC).click()
+            BCMenu.find_element(By.ID, sub_ID_BC).find_element(By.TAG_NAME, "a").click()
+
             print(BCMenu.find_element(By.ID, sub_ID_BC).text)
             time.sleep(2)
             trytofind = False
@@ -200,8 +204,6 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, I
 
     btnReport = ReportCtnSection.find_element(By.ID, ID_btn_click)
     btnReport.click()
-    time.sleep(10)
-
     download_wait(download_path)
 
 
@@ -306,73 +308,16 @@ def exportBC_index(browser, Lv1, Lv2):
     return 0
 
 
-# %%
-########################
-# begein DAG
-with DAG(
-    dag_id="DMS_export_daily",
-    schedule_interval="30 23 * * *",
-    # schedule="@daily",
-    start_date=pendulum.datetime(2023, 10, 30, tz="Asia/Bangkok"),
-    catchup=False,
-    tags=["example"],
-) as dag:
-    start = EmptyOperator(task_id="start")
+print(f"{begin} => {end}")
+print(download_path)
+browser = webdriver.Chrome(service=service, options=chrome_options)
+login(browser)
+# exportUnits(browser)
+# exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
+# exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
 
-    @task(task_id="print_the_context")
-    def print_context(ds=None, **kwargs):
-        """Print the Airflow context and ds variable from the context."""
-        pprint(kwargs)
-        print(ds)
-        return "Whatever you return gets printed in the logs"
-
-    printLog = print_context()
-    with TaskGroup("section_0", tooltip="Tasks for Load Data") as section_0:
-        RunPythonScript = BashOperator(
-            task_id="Remove_Exist_File",
-            bash_command=f"rm -r {download_path}",
-            # bash_command=f"dir   {download_path}",
-        )
-    with TaskGroup("section_1", tooltip="Tasks for Load Data") as section_1:
-        # Task 1
-        @task(task_id=f"DMS_export_daily")
-        def DMS_export_daily():
-            print(f"{begin} => {end}")
-            print(download_path)
-            browser = webdriver.Chrome(service=service, options=chrome_options)
-            login(browser)
-            exportUnits(browser)
-            exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
-            exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
-
-            n = 5
-            for i in range(0, n):
-                result = exportBC_index(browser, 1, 1)
-                if result == 1:
-                    break
-
-            for i in range(0, n):
-                result = exportBC_index(browser, 7, 3)
-                if result == 1:
-                    break
-
-            for i in range(0, n):
-                result = exportBC_index(browser, 10, 1)
-                if result == 1:
-                    break
-
-        DMS_export_daily = DMS_export_daily()
-
-        @task(task_id=f"Upload_report")
-        def DMS_upload_report():
-            for f in os.listdir(localPath):
-                site.upload_file_sharepoint(
-                    localPath,
-                    f"{folder_url_shrpt}/{subfolder_url_shrpt}/{noww}",
-                    f,
-                    url_shrpt,
-                )
-
-        DMS_upload_report = DMS_upload_report()
-        DMS_export_daily >> DMS_upload_report
-    start >> printLog >> section_0 >> section_1
+n = 5
+for i in range(0, n):
+    result = exportBC_index(browser, 1, 1)
+    if result == 1:
+        break
