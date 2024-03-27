@@ -90,6 +90,14 @@ def fileList(folder, ctx):
 
     return result
 
+def listfilename(folder):
+    flist =[]
+    for f in os.listdir(folder):
+        if os.path.isdir(f"{folder}/{f}"):
+            flist = flist + listfilename(f"{folder}/{f}")
+        else:
+            flist.append(f)
+    return flist
 
 def insertDF(df, list):
     df.loc[-1] = list  # adding a row
@@ -149,6 +157,8 @@ def MasterData1(folder, fileName):
     temp = pd.to_datetime("20210101T000000", format="ISO8601")
     for f in os.listdir(sourcePath):
         print(f)
+        if f == f'{folder}.xls': continue
+        if f == f'{folder}.xlsx': continue
         if f.find("csv") > -1:
             continue
         T = f[len(folder) : len(folder) + 8] + "T" + f[len(folder) + 8 : f.find(".")]
@@ -180,6 +190,9 @@ def MasterData2(folder, fileName):
     # Get a list of file paths for files with the specified name pattern in the given directory
     temp = pd.to_datetime("20210101T000000", format="ISO8601")
     for f in os.listdir(sourcePath):
+        if f == f'{folder}.xls': continue
+        if f == f'{folder}.xlsx': continue
+
         print(f)
         if f.find("csv") > -1:
             continue
@@ -236,7 +249,13 @@ with DAG(
             subFolder = folder_url_shrpt + "/" + subfolder_url_shrpt
             # folderlist_shrpt = print_folder_contents(ctx, subFolder, "")
             flist = fileList(folder_url_shrpt + "/" + subfolder_url_shrpt, ctx)
-
+            print(flist)
+            fnamelist = listfilename(localPath)
+            print(fnamelist)
+            print(len(fnamelist))
+            
+            
+            fcount = 0
             folderlist = [
                 "Bao_cao_chi_tiet_VTKHC2",
                 "Bao_cao_du_lieu_don_hang",
@@ -256,15 +275,25 @@ with DAG(
                 for f in flist:
                     foldername = f[: str.rfind(f, "/")]
                     filename = f[str.rfind(f, "/") + 1 :]
-
+                    print(f'xxx test {foldername} ->> {filename}')                    
                     if str.find(f, folder) > -1:
-                        try:
-                            site.download_file_sharepoint(foldername, f"{localPath}/{folder}", filename, url_shrpt)
-                        except:
-                            print(f"Download fail {filename}")
-                            pass
                         print(f"{localPath}/{folder}/{filename}")
-
+                        print((f in fnamelist))
+                        if  not (f in fnamelist):
+                            try:
+                                site.download_file_sharepoint(foldername, f"{localPath}/{folder}", filename, url_shrpt)
+                                print(fcount)
+                                fcount +=1
+                            except:
+                                print(f"Download fail {filename}")
+                                pass
+                    else:
+                        print("next")
+                        fcount
+            
+            print(f'{fcount} downloaded')
+            fnamelist = listfilename(localPath)
+            print(len(fnamelist))
         LoadSharePointFile = LoadSharePointFile()
 
         @task(task_id=f"Bao_cao_chi_tiet_VTKHC2")
@@ -374,20 +403,25 @@ with DAG(
                 pass
             # %% Get latest Units file
             # Get a list of file paths for files with the specified name pattern in the given directory
+            print('MasterData1("Units", "dfUnits.csv")')
             MasterData1("Units", "dfUnits.csv")
             # %% Get latest Danh_sach_nhanVien file
             # Get a list of file paths for files with the specified name pattern in the given directory
+            print('MasterData1("Danh_sach_nhan_vien", "dfDSNV.csv")')
             MasterData1("Danh_sach_nhan_vien", "dfDSNV.csv")
             # %% Get latest Danh_sach_nhanVien file
             # Get a list of file paths for files with the specified name pattern in the given directory
+            print('MasterData2("Thong_Tin_San_Pham", "dfDSSP.csv")')
             MasterData2("Thong_Tin_San_Pham", "dfDSSP.csv")
             # %% Get latest Danh_sach_nhanVien file
             # Get a list of file paths for files with the specified name pattern in the given directory
+            print('MasterData2("Du_lieu_danh_muc_khachhang", "dfDSKHC2.csv")')
             MasterData2("Du_lieu_danh_muc_khachhang", "dfDSKHC2.csv")
 
         MasterData = MasterData()
 
         LoadSharePointFile >> [BcVTKHC2, BcDonHang, MasterData]
+        # [BcVTKHC2, BcDonHang, MasterData]
         # MasterData
     end = EmptyOperator(task_id="end")
 

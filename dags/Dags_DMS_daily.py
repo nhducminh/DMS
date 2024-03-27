@@ -103,7 +103,7 @@ def download_wait(path_to_downloads):
     pre_download = len(os.listdir(path_to_downloads))
     print(pre_download)
     waittime = 0
-    maxtime = 20
+    maxtime = 30
 
     while 1:
         after_download = len(os.listdir(path_to_downloads))
@@ -115,7 +115,7 @@ def download_wait(path_to_downloads):
             time.sleep(2)
             waittime += 2
         if waittime >= maxtime:
-            print("download faile")
+            print("download faileddddd")
             break
     return waittime
 
@@ -147,61 +147,6 @@ def exportMaster(_URL, browser):
     except Exception as e:
         print(e)
         pass
-    download_wait(download_path)
-
-
-def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click):
-    # Export file
-    print(download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click)
-    _URL = "https://dpm.dmsone.vn/report/list"
-    id = "btnExportExcel"
-
-    try:
-        browser.get(_URL)
-        time.sleep(1)
-
-    except Exception as e:
-        print(e)
-        return -1
-        pass
-
-    trytofind = True
-    count = 0
-    while trytofind:
-        try:
-            BCMenu = browser.find_element(By.ID, ID_BC)
-            print(BCMenu.text)
-            BCMenu.find_element(By.TAG_NAME, "ins").click()
-            time.sleep(1)
-            BCMenu.find_element(By.ID, sub_ID_BC).click()
-            print(BCMenu.find_element(By.ID, sub_ID_BC).text)
-            time.sleep(2)
-            trytofind = False
-        except:
-            time.sleep(2)
-            count += 1
-            print(f"try {count}")
-            if count == 10:
-                trytofind = False
-
-    ReportCtnSection = browser.find_element(By.CLASS_NAME, "ReportCtnSection")
-    print(f"{begin}=>{end}")
-    fromdate = ReportCtnSection.find_element(By.ID, ID_fromDate)
-    fromdate = ReportCtnSection.find_element(By.ID, ID_fromDate)
-    fromdate.click()
-    fromdate.send_keys(begin)
-
-    time.sleep(1)
-
-    todate = ReportCtnSection.find_element(By.ID, ID_toDate)
-    todate.click()
-    todate.send_keys(end)
-    time.sleep(1)
-
-    btnReport = ReportCtnSection.find_element(By.ID, ID_btn_click)
-    btnReport.click()
-    time.sleep(10)
-
     download_wait(download_path)
 
 
@@ -278,13 +223,80 @@ def login(browser):
         return -1
 
 
+
+def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click):
+    # Export file
+    print(download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click)
+    _URL = "https://dpm.dmsone.vn/report/list"
+    id = "btnExportExcel"
+
+    try:
+        browser.get(_URL)
+        time.sleep(1)
+
+    except Exception as e:
+        print(e)
+        return -1
+        pass
+
+    trytofind = True
+    count = 0
+    while trytofind:
+        try:
+            BCMenu = browser.find_element(By.ID, ID_BC)
+            print(BCMenu.text)
+            BCMenu.find_element(By.TAG_NAME, "ins").click()
+            time.sleep(1)
+            BCMenu.find_element(By.ID, sub_ID_BC).click()
+            print(BCMenu.find_element(By.ID, sub_ID_BC).text)
+            time.sleep(2)
+            trytofind = False
+        except:
+            time.sleep(2)
+            count += 1
+            print(f"try {count}")
+            if count == 10:
+                trytofind = False
+
+    ReportCtnSection = browser.find_element(By.CLASS_NAME, "ReportCtnSection")
+    print(f"{begin}=>{end}")
+    fromdate = ReportCtnSection.find_element(By.ID, ID_fromDate)
+    fromdate = ReportCtnSection.find_element(By.ID, ID_fromDate)
+    fromdate.click()
+    fromdate.send_keys(begin)
+
+    time.sleep(1)
+
+    todate = ReportCtnSection.find_element(By.ID, ID_toDate)
+    todate.click()
+    todate.send_keys(end)
+    time.sleep(1)
+
+    btnReport = ReportCtnSection.find_element(By.ID, ID_btn_click)
+    btnReport.click()
+    time.sleep(10)
+
+    download_wait(download_path)
+
 def exportBC_index(browser, Lv1, Lv2):
     dsBaocao = pd.read_csv("/home/nhdminh/DMS/dags/DSBaoCao.csv")
     filterBC1 = dsBaocao["Lv1"] == Lv1
     filterBC2 = dsBaocao["Lv2"] == Lv2
     BC = dsBaocao[filterBC1 * filterBC2].reset_index(drop=True).to_dict()
     print(BC)
-    exportBC(
+    # btnSearch
+    if Lv1 == 2 and Lv2 == 1:
+        exportBC(
+            browser,
+            download_path,
+            BC["ID_BC"][0],
+            BC["sub_ID_BC"][0],
+            "fromDate",
+            "toDate",
+            "btnSearch",
+        )
+    else:
+        exportBC(
         browser,
         download_path,
         BC["ID_BC"][0],
@@ -292,16 +304,18 @@ def exportBC_index(browser, Lv1, Lv2):
         "fromDate",
         "toDate",
         "btnReport",
-    )
+        )
     time.sleep(5)
 
     # print((f"{download_path}/{BC['file_name'][0]}"))
-    for f in os.listdir(download_path):
-        if BC["file_name"][0] in f:
-            print(f)
-            return 1
+    try:
+        for f in os.listdir(download_path):
+            if BC["file_name"][0] in f:
+                print(f)
+                return 1
+    except:
+        pass
     # not downloaded
-    print("download fail")
     print(dt.datetime.now())
     return 0
 
@@ -350,17 +364,37 @@ with DAG(
                 result = exportBC_index(browser, 1, 1)
                 if result == 1:
                     break
-
+            #2.1 btnSearch
+            for i in range(0, n):
+                result = exportBC_index(browser, 2, 1)
+                if result == 1:
+                    break
+                if i ==n:
+                    print("failed")
+            for i in range(0, n):
+                result = exportBC_index(browser, 7, 2)
+                if result == 1:
+                    break
+                if i ==n:
+                    print("failed")
             for i in range(0, n):
                 result = exportBC_index(browser, 7, 3)
                 if result == 1:
                     break
-
+                if i ==n:
+                    print("failed")
             for i in range(0, n):
                 result = exportBC_index(browser, 10, 1)
                 if result == 1:
                     break
-
+                if i ==n:
+                    print("failed")
+            for i in range(0, n):
+                result = exportBC_index(browser, 10, 2)
+                if result == 1:
+                    break
+                if i ==n:
+                    print("failed")
         DMS_export_daily = DMS_export_daily()
 
         @task(task_id=f"Upload_report")
@@ -375,4 +409,5 @@ with DAG(
 
         DMS_upload_report = DMS_upload_report()
         DMS_export_daily >> DMS_upload_report
+        # DMS_export_daily
     start >> printLog >> section_0 >> section_1
