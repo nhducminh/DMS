@@ -123,7 +123,8 @@ with DAG(
                     print("Failed to fetch data from the API")
             df = df.reset_index(drop=True)
             print(len(df))
-            df.to_csv(f"{noww}_2nong_Product_Price.csv", index=False)
+            print("save to CSV")
+            df.to_csv(f"{localPath}/{noww}_2nong_Product_Price.csv", index=False)
             dfList = df.explode("info").reset_index(drop=True)
             temp = pd.DataFrame(dfList["info"].values.tolist())
             dfList = dfList.drop(columns="info", axis=1).join(temp, rsuffix="_temp")
@@ -166,7 +167,7 @@ with DAG(
             df = df.reset_index(drop=True)
             print(len(df))
 
-            df.to_csv(f"{noww}_2nong_Goods_Price.csv", index=False)
+            df.to_csv(f"{localPath}/{noww}_2nong_Goods_Price.csv", index=False)
             dfList = df.explode("info").reset_index(drop=True)
             temp = pd.DataFrame(dfList["info"].values.tolist())
             dfList = dfList.drop(columns="info", axis=1).join(temp, rsuffix="_temp")

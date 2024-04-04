@@ -342,11 +342,14 @@ with DAG(
 
     printLog = print_context()
     with TaskGroup("section_0", tooltip="Tasks for Load Data") as section_0:
-        RunPythonScript = BashOperator(
-            task_id="Remove_Exist_File",
-            bash_command=f"rm -r {download_path}",
-            # bash_command=f"dir   {download_path}",
-        )
+            RunPythonScript = BashOperator(
+                task_id="Remove_Exist_File",
+                bash_command=f"rm -r {download_path}; exit 0;",
+                # bash_command=f"dir   {download_path}",
+            )
+            
+            
+
     with TaskGroup("section_1", tooltip="Tasks for Load Data") as section_1:
         # Task 1
         @task(task_id=f"DMS_export_daily")
