@@ -118,6 +118,7 @@ services:
 
   chrome:
     image: selenium/standalone-chrome
+    container_name: remote_chromedriver
     depends_on:
       - selenium-hub
     environment:

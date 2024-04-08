@@ -62,10 +62,14 @@ begin = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(da
 # Khởi tạo RemoteWebDriver để kết nối với Selenium Grid
 chrome_options = Options()
 chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-dev-shm-usage")
+# chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--disable-gpu")
 remote_webdriver = 'remote_chromedriver'
-driver = webdriver.Remote(f'{remote_webdriver}:4444', options=chrome_options)
+
+# remote_webdriver = 'remote_chromedriver'
+# with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
+#   # Scraping part
+#   pass 
 
 
 
@@ -326,7 +330,7 @@ def exportBC_index(browser, Lv1, Lv2):
 ########################
 # begein DAG
 with DAG(
-    dag_id="DMS_export_daily_docker",
+    dag_id="DAG_Test",
     schedule_interval="30 23 * * *",
     # schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, tz="Asia/Bangkok"),
@@ -346,8 +350,8 @@ with DAG(
     with TaskGroup("section_0", tooltip="Tasks for Load Data") as section_0:
             RunPythonScript = BashOperator(
                 task_id="Remove_Exist_File",
-                bash_command=f"rm -r {download_path}; exit 0;",
-                # bash_command=f"dir   {download_path}",
+                #bash_command=f"rm -r {download_path}; exit 0;",
+                bash_command=f"dir; exit 0;",
             )
             
             
@@ -356,61 +360,59 @@ with DAG(
         # Task 1
         @task(task_id=f"DMS_export_daily")
         def DMS_export_daily():
-            print(f"{begin} => {end}")
-            print(download_path)
-            browser = driver
+            print("DMS_export_daily")
+            url_dms = 'https://dpm.dmsone.vn/login'
+            browser  = webdriver.Remote(f'{remote_webdriver}:4444', options=chrome_options)
+            browser.get(url_dms)            
             login(browser)
-            exportUnits(browser)
-            exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
-            exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
 
-            n = 5
-            for i in range(0, n):
-                result = exportBC_index(browser, 1, 1)
-                if result == 1:
-                    break
-            #2.1 btnSearch
-            for i in range(0, n):
-                result = exportBC_index(browser, 2, 1)
-                if result == 1:
-                    break
-                if i ==n:
-                    print("failed")
-            for i in range(0, n):
-                result = exportBC_index(browser, 7, 2)
-                if result == 1:
-                    break
-                if i ==n:
-                    print("failed")
-            for i in range(0, n):
-                result = exportBC_index(browser, 7, 3)
-                if result == 1:
-                    break
-                if i ==n:
-                    print("failed")
-            for i in range(0, n):
-                result = exportBC_index(browser, 10, 1)
-                if result == 1:
-                    break
-                if i ==n:
-                    print("failed")
-            for i in range(0, n):
-                result = exportBC_index(browser, 10, 2)
-                if result == 1:
-                    break
-                if i ==n:
-                    print("failed")
+            # exportUnits(browser)
+            # exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
+            # exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
+
+            # n = 5
+            # for i in range(0, n):
+            #     result = exportBC_index(browser, 1, 1)
+            #     if result == 1:
+            #         break
+            # #2.1 btnSearch
+            # for i in range(0, n):
+            #     result = exportBC_index(browser, 2, 1)
+            #     if result == 1:
+            #         break
+            #     if i ==n:
+            #         print("failed")
+            # for i in range(0, n):
+            #     result = exportBC_index(browser, 7, 2)
+            #     if result == 1:
+            #         break
+            #     if i ==n:
+            #         print("failed")
+            # for i in range(0, n):
+            #     result = exportBC_index(browser, 7, 3)
+            #     if result == 1:
+            #         break
+            #     if i ==n:
+            #         print("failed")
+            # for i in range(0, n):
+            #     result = exportBC_index(browser, 10, 1)
+            #     if result == 1:
+            #         break
+            #     if i ==n:
+            #         print("failed")
+            # for i in range(0, n):
+            #     result = exportBC_index(browser, 10, 2)
+            #     if result == 1:
+            #         break
+            #     if i ==n:
+            #         print("failed")
+
+            
         DMS_export_daily = DMS_export_daily()
 
         @task(task_id=f"Upload_report")
         def DMS_upload_report():
-            for f in os.listdir(localPath):
-                site.upload_file_sharepoint(
-                    localPath,
-                    f"{folder_url_shrpt}/{subfolder_url_shrpt}/{noww}",
-                    f,
-                    url_shrpt,
-                )
+            print("DMS_upload_report")
 
         DMS_upload_report = DMS_upload_report()
         DMS_export_daily >> DMS_upload_report
