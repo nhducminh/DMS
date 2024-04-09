@@ -46,8 +46,13 @@ with DAG(
             chrome_options.add_argument("--disable-gpu")
             chrome_options.add_argument("--no-sandbox")
             chrome_options.add_argument("--window-size=1920,1080")
-            
-            driver = webdriver.Remote(command_executor=f'{get_local_ip()}:4444/wd/hub', options=chrome_options,)
+            # Call the function to get the local IP address
+            local_ip_address = get_local_ip()
+
+            # Print the local IP address
+            print(f"Local IP address: {local_ip_address}")
+            print(local_ip_address)
+            driver = webdriver.Remote(command_executor=f'http://selenium-hub:4444/wd/hub', options=chrome_options,)
             driver.get("https://vnexpress.net/")
             print(driver.title)
             time_now = driver.find_element(By.CLASS_NAME,"time-now")

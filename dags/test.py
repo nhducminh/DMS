@@ -66,7 +66,7 @@ chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-gpu")
 remote_webdriver = 'remote_chromedriver'
 
-# remote_webdriver = 'remote_chromedriver'
+# remote_webdriver = 'selenium-hub'
 # with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
 #   # Scraping part
 #   pass 
@@ -362,17 +362,12 @@ with DAG(
         def DMS_export_daily():
             print("DMS_export_daily")
             url_dms = 'https://dpm.dmsone.vn/login'
-            
-            # with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
-            #   # Scraping part
-            #     driver.get(url_dms)
-            #     print(driver.title)       
-            # pass 
-        
-            with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
+            remote_webdriver = 'selenium-hub'
+            with webdriver.Remote(f'http://{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
               # Scraping part
                 driver.get(url_dms)
                 print(driver.title)       
+                login(driver)
             pass 
 
             
