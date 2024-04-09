@@ -68,7 +68,7 @@ x-airflow-common:
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-mysql-connector-python mysqlclient cx_Oracle pandas jupyterlab openpyxl xlsxwriter xlwings Office365-REST-Python-Client office365 pysharepoint xlrd SQLAlchemy selenium apache-airflow-providers-mysql apache-airflow-providers-oracle apache-airflow-providers-postgres apache-airflow-providers-apache-spark apache-airflow-providers-databricks}
+    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-chromedriver-binary mysql-connector-python mysqlclient cx_Oracle pandas jupyterlab openpyxl xlsxwriter xlwings Office365-REST-Python-Client office365 pysharepoint xlrd SQLAlchemy selenium apache-airflow-providers-mysql apache-airflow-providers-oracle apache-airflow-providers-postgres apache-airflow-providers-apache-spark apache-airflow-providers-databricks}
   volumes:
     - /home/nhdminh/DMS/dags:/opt/airflow/dags
     - /home/nhdminh/airflow/logs:/opt/airflow/logs
@@ -110,21 +110,31 @@ services:
       start_period: 30s
     restart: always
 
-  selenium-hub:
-    image: selenium/hub:latest
-    ports:
-      - "4444:4444"
-    restart: always
-
   chrome:
-    image: selenium/standalone-chrome
-    container_name: remote_chromedriver
+    image: selenium/node-chrome
+    container_name: chromedriver
+    shm_size: 2gb
     depends_on:
       - selenium-hub
     environment:
-      - HUB_HOST=selenium-hub
-      - HUB_PORT=4444
+      - START_XVFB=false
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_MAX_SESSIONS=8
+
     restart: always
+
+  selenium-hub:
+    image: selenium/hub:latest
+    container_name: selenium-hub
+    ports:
+      - "4442:4442"
+      - "4443:4443"
+      - "4444:4444"
+    restart: always
+ 
 
   airflow-webserver:
     <<: *airflow-common

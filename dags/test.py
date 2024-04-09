@@ -362,50 +362,18 @@ with DAG(
         def DMS_export_daily():
             print("DMS_export_daily")
             url_dms = 'https://dpm.dmsone.vn/login'
-            browser  = webdriver.Remote(f'{remote_webdriver}:4444', options=chrome_options)
-            browser.get(url_dms)            
-            login(browser)
-
-            # exportUnits(browser)
-            # exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
-            # exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
-
-            # n = 5
-            # for i in range(0, n):
-            #     result = exportBC_index(browser, 1, 1)
-            #     if result == 1:
-            #         break
-            # #2.1 btnSearch
-            # for i in range(0, n):
-            #     result = exportBC_index(browser, 2, 1)
-            #     if result == 1:
-            #         break
-            #     if i ==n:
-            #         print("failed")
-            # for i in range(0, n):
-            #     result = exportBC_index(browser, 7, 2)
-            #     if result == 1:
-            #         break
-            #     if i ==n:
-            #         print("failed")
-            # for i in range(0, n):
-            #     result = exportBC_index(browser, 7, 3)
-            #     if result == 1:
-            #         break
-            #     if i ==n:
-            #         print("failed")
-            # for i in range(0, n):
-            #     result = exportBC_index(browser, 10, 1)
-            #     if result == 1:
-            #         break
-            #     if i ==n:
-            #         print("failed")
-            # for i in range(0, n):
-            #     result = exportBC_index(browser, 10, 2)
-            #     if result == 1:
-            #         break
-            #     if i ==n:
-            #         print("failed")
+            
+            # with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
+            #   # Scraping part
+            #     driver.get(url_dms)
+            #     print(driver.title)       
+            # pass 
+        
+            with webdriver.Remote(f'{remote_webdriver}:4444/wd/hub', options=chrome_options) as driver:
+              # Scraping part
+                driver.get(url_dms)
+                print(driver.title)       
+            pass 
 
             
         DMS_export_daily = DMS_export_daily()
