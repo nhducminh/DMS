@@ -88,107 +88,165 @@ def exportMaster(_URL, browser):
 
 
 # %%
-def exportBC(browser, ID_BC, sub_ID_BC, fromDate, toDate, ID_btn_click):
+
+
+def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click):
     # Export file
+    print(f'exportBC {download_path}, {ID_BC}, {sub_ID_BC}, {ID_fromDate}, {ID_toDate}, {ID_btn_click}')
     _URL = "https://dpm.dmsone.vn/report/list"
     id = "btnExportExcel"
+
     try:
         browser.get(_URL)
-        print(browser.title)
         time.sleep(1)
 
     except Exception as e:
         print(e)
         return -1
         pass
-    BCMenu = browser.find_element(By.ID, ID_BC)
-    BCMenu.find_element(By.TAG_NAME, "ins").click()
-    time.sleep(1)
 
-    print(BCMenu.find_element(By.ID, sub_ID_BC).text)
-    BCMenu.find_element(By.ID, sub_ID_BC).click()
-    time.sleep(2)
+    trytofind = True
+    count = 0
+    while trytofind:
+        try:
+            BCMenu = browser.find_element(By.ID, ID_BC)
+            print(BCMenu.text)
+            BCMenu.find_element(By.TAG_NAME, "ins").click()
+            time.sleep(1)
+            BCMenu.find_element(By.ID, sub_ID_BC).click()
+            print(BCMenu.find_element(By.ID, sub_ID_BC).text)
+            time.sleep(2)
+            trytofind = False
+        except:
+            time.sleep(2)
+            count += 1
+            print(f"try {count}")
+            if count == 10:
+                trytofind = False
 
     ReportCtnSection = browser.find_element(By.CLASS_NAME, "ReportCtnSection")
+    print(f"{begin}=>{end}")
+    # 3,1,REPORT_PROMOTION_PROGRAM,REPORT_PROMOTION_PROGRAM_5_1,3.1 Tổng kết khuyến mãi
+    
+    if sub_ID_BC != 'BCCTTL' or  sub_ID_BC !=  'CBTDTTCTTLTB' or sub_ID_BC !='sub_ID_BC':
+        print("no date")
+    else:
+        fromdate = ReportCtnSection.find_element(By.ID, ID_fromDate)
+        fromdate.click()
+        fromdate.send_keys(begin)
 
-    fromdate = ReportCtnSection.find_element(By.ID, fromDate)
-    fromdate.click()
-    fromdate.send_keys(begin)
+        time.sleep(1)
 
-    time.sleep(1)
+        todate = ReportCtnSection.find_element(By.ID, ID_toDate)
+        todate.click()
+        todate.send_keys(end)
+        time.sleep(1)
+    
+    
+    if sub_ID_BC == 'REPORT_PROMOTION_PROGRAM_5_1':
+        btnReport = ReportCtnSection.find_element(By.ID, "btnReportXNT1D1")
+    elif sub_ID_BC == 'CBTDTTCTTLTB' or sub_ID_BC=='CBTDTTCTTLTB_NEW':
+        btnReport = ReportCtnSection.find_element(By.ID, "btnSearch")
+    else:
+        btnReport = ReportCtnSection.find_element(By.ID, ID_btn_click)
+        
 
-    todate = ReportCtnSection.find_element(By.ID, toDate)
-    todate.click()
-    todate.send_keys(end)
-    time.sleep(1)
 
-    btnReport = ReportCtnSection.find_element(By.ID, ID_btn_click)
+        
     btnReport.click()
-    print(btnReport.text)
-    time.sleep(5)
+    time.sleep(10)
+    download_wait(download_path)
+
+    btnerrMsg = browser.find_element(By.ID,"errMsg")
+    print(btnerrMsg.text)
+    return len(btnerrMsg.text)
+    
 
 
 def exportBC_index(browser, Lv1, Lv2):
-    dsBaocao = pd.read_csv("/home/nhdminh/DMS/dags/DSBaocao.csv")
+    
+    print(f'exportBC_index {Lv1}, {Lv2}:')    
+    
+    dsBaocao = pd.read_csv("/home/nhdminh/DMS/dags/DSBaoCao.csv")
     filterBC1 = dsBaocao["Lv1"] == Lv1
     filterBC2 = dsBaocao["Lv2"] == Lv2
     BC = dsBaocao[filterBC1 * filterBC2].reset_index(drop=True).to_dict()
+    
+    print(BC)
+    try:
+        for f in os.listdir(download_path):
+            if BC["file_name"][0] in f:
+                print(f"đã tồn tại file {f} => pass")
+                return 1
+    except: pass
+
     exportBC(
         browser,
+        download_path,
         BC["ID_BC"][0],
         BC["sub_ID_BC"][0],
-        BC["fromDate"][0],
-        BC["toDate"][0],
-        BC["ID_btn_click"][0],
-    )
-    # filecontent
-    # C:\Users\nhducminh\Downloads\
-    print(BC["filecontent"][0])
-    download_wait(download_path)
+        "fromDate",
+        "toDate",
+        "btnReport",
+        )
+    time.sleep(5)
+
+    try:
+        for f in os.listdir(download_path):
+            if BC["file_name"][0] in f:
+                print(f"Đã tải thành công {BC['ID_BC'][0]} {BC['sub_ID_BC'][0]} {f}")
+                return 1
+    except:
+        pass
+    # not downloaded
+    print(dt.datetime.now())
+    return 0
+
 
 
 # %%
 def exportUnits(browser):
+    print("exportUnits")
     _URL = "https://dpm.dmsone.vn/catalog/unit-tree/info"
     # ResetList FixFloat BreadcrumbList
     browser.get(_URL)
     time.sleep(2)
-    print(
-        browser.find_element(By.CSS_SELECTOR, ".ResetList.FixFloat.BreadcrumbList").text
-    )
+    print(browser.find_element(By.CSS_SELECTOR, ".ResetList.FixFloat.BreadcrumbList").text)
     exportBtn = browser.find_element(By.ID, "collapseTab")
     exportBtn.click()
     print("click collapseTab")
     time.sleep(2)
-
+    print("Export Units")
     exportBtn = browser.find_element(By.ID, "tabActive1")
     exportBtn.click()
-    print("click tabActive1")
+    print(f"click  {exportBtn.text}")
     time.sleep(2)
 
     exportBtn = browser.find_element(By.ID, "btnSearchShop")
     exportBtn.click()
-    print("click btnSearchShop")
+    print("click btnSearchShop => tim kiem don vi")
+
     time.sleep(2)
     parentElement = browser.find_element(By.ID, "container1")
-    exportBtn = parentElement.find_element(By.ID, "btnExport")
+    exportBtn = parentElement.find_element(By.ID, "btnExportShop")
     exportBtn.click()
-    print("click btnExport")
+    print("click btnExportShop => export don vi")
     time.sleep(5)
 
+    print("Export NVTT")
     exportBtn = browser.find_element(By.ID, "tabActive2")
     exportBtn.click()
-    print("click tabActive2")
+    print(f"click  {exportBtn.text}")
     time.sleep(2)
 
     exportBtn = browser.find_element(By.ID, "btnSearchStaff")
     exportBtn.click()
-    print("click btnSearchStaff")
+    print("click btnSearchStaff => tim kiem nhan vien")
     time.sleep(2)
     parentElement = browser.find_element(By.ID, "container2")
     exportBtn = parentElement.find_element(By.ID, "btnExport")
     exportBtn.click()
-    print("click btnExport")
+    print("click btnExport => export nhan vien")
     time.sleep(5)
     download_wait(download_path)
 
@@ -236,13 +294,16 @@ def main():
         print("quit")
         browser.quit()
         return
-        pass
+        
 
-    exportUnits(browser)
-    exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
-    exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
-    exportBC_index(browser, 10, 1)
-    exportBC_index(browser, 7, 3)
+    # exportUnits(browser)
+    # exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
+    # exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
+    
+    exportBC_index(browser, 5, 1)
+    exportBC_index(browser, 6, 1)
+    exportBC_index(browser, 6, 2)
+    exportBC_index(browser, 7, 4)
     time.sleep(1)
     print("quit")
     browser.quit()

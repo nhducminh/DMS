@@ -114,7 +114,8 @@ def download_wait(path_to_downloads):
         else:
             time.sleep(2)
             waittime += 2
-        if waittime >= maxtime:
+            
+        if waittime > maxtime:
             print("download faileddddd")
             break
     return waittime
@@ -126,9 +127,20 @@ def download_wait(path_to_downloads):
 def exportMaster(_URL, browser):
     print("exportMaster")
     # Export file Du_lieu_khach_hang/Product
+    if _URL=='https://dpm.dmsone.vn/catalog_customer_mng/info':
+        for f in os.listdir(download_path):
+            if "Danh_sach_nhan_vien" in f:
+                print(f"Đã tồn tại file {f}")
+                return 0
+    #Danh_sach_nhan_vien
+    if _URL=='https://dpm.dmsone.vn/catalog/product/infoindex':
+        for f in os.listdir(download_path):
+            if "Thong_Tin_San_Pham" in f:
+                print(f"Đã tồn tại file {f}")
+                return 0
+    #Thong_Tin_San_Pham
     try:
         browser.get(_URL)
-
         try:
             exportBtn = browser.find_element(By.ID, "btnExport")
             exportBtn.click()
@@ -155,6 +167,10 @@ def exportMaster(_URL, browser):
 
 def exportUnits(browser):
     print("exportUnits")
+    for f in os.listdir(download_path):
+        if "Units" in f:
+            print(f"Đã tồn tại file {f}")
+            return 0
     _URL = "https://dpm.dmsone.vn/catalog/unit-tree/info"
     # ResetList FixFloat BreadcrumbList
     browser.get(_URL)
@@ -226,7 +242,7 @@ def login(browser):
 
 def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click):
     # Export file
-    print(download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click)
+    print(f'exportBC {download_path}, {ID_BC}, {sub_ID_BC}, {ID_fromDate}, {ID_toDate}, {ID_btn_click}')
     _URL = "https://dpm.dmsone.vn/report/list"
     id = "btnExportExcel"
 
@@ -275,28 +291,32 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, I
     btnReport = ReportCtnSection.find_element(By.ID, ID_btn_click)
     btnReport.click()
     time.sleep(10)
-
     download_wait(download_path)
 
+    btnerrMsg = browser.find_element(By.ID,"errMsg")
+    print(btnerrMsg.text)
+    return len(btnerrMsg.text)
+    
+
+
 def exportBC_index(browser, Lv1, Lv2):
+    
+    print(f'exportBC_index {Lv1}, {Lv2}:')    
+    
     dsBaocao = pd.read_csv("/home/nhdminh/DMS/dags/DSBaoCao.csv")
     filterBC1 = dsBaocao["Lv1"] == Lv1
     filterBC2 = dsBaocao["Lv2"] == Lv2
     BC = dsBaocao[filterBC1 * filterBC2].reset_index(drop=True).to_dict()
+    
     print(BC)
-    # btnSearch
-    if Lv1 == 2 and Lv2 == 1:
-        exportBC(
-            browser,
-            download_path,
-            BC["ID_BC"][0],
-            BC["sub_ID_BC"][0],
-            "fromDate",
-            "toDate",
-            "btnSearch",
-        )
-    else:
-        exportBC(
+    try:
+        for f in os.listdir(download_path):
+            if BC["file_name"][0] in f:
+                print(f"đã tồn tại file {f} => pass")
+                return 1
+    except: pass
+
+    exportBC(
         browser,
         download_path,
         BC["ID_BC"][0],
@@ -307,11 +327,10 @@ def exportBC_index(browser, Lv1, Lv2):
         )
     time.sleep(5)
 
-    # print((f"{download_path}/{BC['file_name'][0]}"))
     try:
         for f in os.listdir(download_path):
             if BC["file_name"][0] in f:
-                print(f)
+                print(f"Đã tải thành công {BC['ID_BC'][0]} {BC['sub_ID_BC'][0]} {f}")
                 return 1
     except:
         pass
@@ -325,7 +344,7 @@ def exportBC_index(browser, Lv1, Lv2):
 # begein DAG
 with DAG(
     dag_id="DMS_export_daily",
-    schedule_interval="30 23 * * *",
+    schedule_interval="30 11,23 * * *",
     # schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, tz="Asia/Bangkok"),
     catchup=False,
@@ -344,7 +363,7 @@ with DAG(
     with TaskGroup("section_0", tooltip="Tasks for Load Data") as section_0:
             RunPythonScript = BashOperator(
                 task_id="Remove_Exist_File",
-                bash_command=f"rm -r {download_path}; exit 0;",
+                bash_command=f"ls {download_path}; exit 0;",
                 # bash_command=f"dir   {download_path}",
             )
             
@@ -358,46 +377,34 @@ with DAG(
             print(download_path)
             browser = webdriver.Chrome(service=service, options=chrome_options)
             login(browser)
+
             exportUnits(browser)
             exportMaster("https://dpm.dmsone.vn/catalog_customer_mng/info", browser)
+            #Danh_sach_nhan_vien
+        
             exportMaster("https://dpm.dmsone.vn/catalog/product/infoindex", browser)
+            #Thong_Tin_San_Pham
 
-            n = 5
-            for i in range(0, n):
-                result = exportBC_index(browser, 1, 1)
-                if result == 1:
-                    break
-            #2.1 btnSearch
-            for i in range(0, n):
-                result = exportBC_index(browser, 2, 1)
-                if result == 1:
-                    break
-                if i ==n:
-                    print("failed")
-            for i in range(0, n):
-                result = exportBC_index(browser, 7, 2)
-                if result == 1:
-                    break
-                if i ==n:
-                    print("failed")
-            for i in range(0, n):
-                result = exportBC_index(browser, 7, 3)
-                if result == 1:
-                    break
-                if i ==n:
-                    print("failed")
-            for i in range(0, n):
-                result = exportBC_index(browser, 10, 1)
-                if result == 1:
-                    break
-                if i ==n:
-                    print("failed")
-            for i in range(0, n):
-                result = exportBC_index(browser, 10, 2)
-                if result == 1:
-                    break
-                if i ==n:
-                    print("failed")
+            n = 3
+            
+            dsBaocao = pd.read_csv("/home/nhdminh/DMS/dags/DSBaoCao.csv")
+            dsBaocao = dsBaocao[~dsBaocao['file_name'].isna()]
+            for index,row in dsBaocao.iterrows():
+                try:
+                    print(row)
+                    for i in range(0, n):
+                        result = exportBC_index(browser, row["Lv1"], row["Lv2"])
+                        if result==1:break
+                        if i ==n:
+                            print("failed")
+                except: 
+                    print(f"Lỗi xuất báo cáo {row['Lv1']}, {row['Lv2']} ")
+                    pass    
+                
+
+                    
+            for f in (os.listdir(download_path)):
+                print(f)
         DMS_export_daily = DMS_export_daily()
 
         @task(task_id=f"Upload_report")
@@ -414,3 +421,4 @@ with DAG(
         DMS_export_daily >> DMS_upload_report
         # DMS_export_daily
     start >> printLog >> section_0 >> section_1
+#9.3.Bao_cao_theo_doi_khac_phuc

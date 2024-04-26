@@ -4,8 +4,6 @@ import os
 import re
 import sys
 import logging
-from watchdog.observers import Observer
-from watchdog.events import LoggingEventHandler
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -18,12 +16,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s", date
 # Set format for displaying path
 path = sys.argv[1] if len(sys.argv) > 1 else "."
 
-# Initialize logging event handler
-event_handler = LoggingEventHandler()
 
-# Initialize Observer
-observer = Observer()
-observer.schedule(event_handler, path, recursive=True)
+
 # Define ChromeDriver service
 service = Service("/usr/local/bin/chromedriver")  # Adjust the path if needed
 download_path = "/home/nhdminh/airflow/"
