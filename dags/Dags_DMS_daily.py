@@ -34,10 +34,13 @@ from office365.sharepoint.files.file import File
 from office365.runtime.auth.authentication_context import AuthenticationContext
 from office365.sharepoint.client_context import ClientContext
 from office365.sharepoint.files.file import File
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
+
 from sqlalchemy import create_engine
 from sqlalchemy import create_engine
 
@@ -338,7 +341,36 @@ def exportBC_index(browser, Lv1, Lv2):
     print(dt.datetime.now())
     return 0
 
-
+def  duyetKHAll(browser):
+    _URL = 'https://dpm.dmsone.vn/catalog_customer_mng/info'
+    browser.get(_URL)
+    print(browser.title)
+    status =  browser.find_element(By.ID,'status')
+    select = Select(status)
+    select.select_by_visible_text('Dự thảo')
+    time.sleep(1)
+    print('btnSearch')
+    btnSearch = browser.find_element(By.ID,'btnSearch')
+    btnSearch.click()
+    time.sleep(1)
+    print('checkAll')
+    checkAll = browser.find_element(By.ID,'checkAll')
+    checkAll.click()
+    time.sleep(1)
+    print('btnDuyet')
+    btnDuyet = browser.find_element(By.ID,'group_insert_btnAgree')
+    btnDuyet.click()
+    time.sleep(1)
+    print('btnAgree')
+    errMsg = 'Success'
+    try:
+        btnAgree = browser.find_element(By.XPATH,'/html/body/div[22]/div[2]/div[4]/a[1]/span/span')
+        print(btnAgree.text)
+        btnAgree.click()
+    except:
+        time.sleep(1)
+        errMsg = browser.find_element(By.ID,'errMsg').text
+    return errMsg
 # %%
 ########################
 # begein DAG
@@ -371,6 +403,16 @@ with DAG(
 
     with TaskGroup("section_1", tooltip="Tasks for Load Data") as section_1:
         # Task 1
+        @task(task_id=f"duyetKH")
+        def duyetKH():
+            browser = webdriver.Chrome(service=service, options=chrome_options)
+            login(browser)
+            result = duyetKHAll(browser)
+            print(f'duyetKH result {result}')
+            browser.quit()
+            time.sleep(10)
+        duyetKH = duyetKH()
+        
         @task(task_id=f"DMS_export_daily")
         def DMS_export_daily():
             print(f"{begin} => {end}")
@@ -400,13 +442,15 @@ with DAG(
                 except: 
                     print(f"Lỗi xuất báo cáo {row['Lv1']}, {row['Lv2']} ")
                     pass    
-                
+
 
                     
             for f in (os.listdir(download_path)):
                 print(f)
         DMS_export_daily = DMS_export_daily()
+        
 
+        
         @task(task_id=f"Upload_report")
         def DMS_upload_report():
             for f in os.listdir(localPath):
@@ -418,7 +462,7 @@ with DAG(
                 )
 
         DMS_upload_report = DMS_upload_report()
-        DMS_export_daily >> DMS_upload_report
-        # DMS_export_daily
+        duyetKH >> DMS_export_daily >> DMS_upload_report
+
     start >> printLog >> section_0 >> section_1
 #9.3.Bao_cao_theo_doi_khac_phuc

@@ -34,12 +34,15 @@ from office365.sharepoint.files.file import File # type: ignore
 from office365.runtime.auth.authentication_context import AuthenticationContext # type: ignore
 from office365.sharepoint.client_context import ClientContext # type: ignore
 from office365.sharepoint.files.file import File # type: ignore
+
+
 from selenium import webdriver # type: ignore
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities # type: ignore
 from selenium.webdriver.chrome.service import Service # type: ignore
 from selenium.webdriver.common.by import By # type: ignore
 from selenium.webdriver.common.keys import Keys # type: ignore
 from selenium.webdriver.chrome.options import Options # type: ignore
+from selenium.webdriver.support.ui import Select
 
 from sqlalchemy import create_engine # type: ignore
 

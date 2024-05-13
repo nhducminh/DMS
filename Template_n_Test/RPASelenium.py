@@ -4,13 +4,13 @@ import os
 import re
 import sys
 import logging
-from watchdog.observers import Observer
-from watchdog.events import LoggingEventHandler
+
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 
 ###############
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
@@ -18,13 +18,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s", date
 # Set format for displaying path
 path = sys.argv[1] if len(sys.argv) > 1 else "."
 
-# Initialize logging event handler
-event_handler = LoggingEventHandler()
 
-# Initialize Observer
-observer = Observer()
-observer.schedule(event_handler, path, recursive=True)
-# Define ChromeDriver service
 download_path = "/home/nhdminh/airflow/"
 
 
@@ -72,46 +66,57 @@ def download_wait(path_to_downloads):
     return seconds
 
 
-# Login to DMS
-try:
-    elem = browser.find_element(By.NAME, "username")  # Find the Username
-    elem.send_keys("madmin")
-    elem = browser.find_element(By.NAME, "password")  # Find the Password
-    elem.send_keys("PVFCCo@2023" + Keys.RETURN)
-    print("Page Title 2:", browser.title)
 
-except Exception as e:
-    print(e)
-    pass
+def login(browser):
+    browser.get("https://dpm.dmsone.vn/login")
+    # Login to DMS
+    print("Login to DMS")
+    try:
+        elem = browser.find_element(By.NAME, "username")  # Find the Username
+        elem.send_keys("madmin")
+        elem = browser.find_element(By.NAME, "password")  # Find the Password
+        elem.send_keys("PVFCCo@2023" + Keys.RETURN)
+        print("Page Title", browser.title)
+        time.sleep(5)
+        elem = browser.find_element(By.ID, "spHeaderShopInf")
+        print("Page Title", elem.text)
+        return 1
+    except Exception as e:
+        print(e)
+        print("quit")
+        browser.quit()
+        return -1
 
-print("Page Title 3:", browser.title)
-time.sleep(2)
-
-# Export file Du_lieu_khach_hang
-_URL = "https://dpm.dmsone.vn/catalog_customer_mng/info"
-id = "btnExportExcel"
-pattern = re.compile(".Du_lieu_danh_muc_khachhang.xlsx")
-dir = download_path
-
-try:
+def  duyetKHAll(browser):
+    _URL = 'https://dpm.dmsone.vn/catalog_customer_mng/info'
     browser.get(_URL)
-    exportBtn = browser.find_element(By.ID, id)
-    time.sleep(2)
-    exportBtn.click()
-    print("Wait to download")
-    time.sleep(5)
+    print(browser.title)
+    status =  browser.find_element(By.ID,'status')
+    select = Select(status)
+    select.select_by_visible_text('Dự thảo')
+    time.sleep(1)
+    btnSearch = browser.find_element(By.ID,'btnSearch')
+    btnSearch.click()
+    time.sleep(1)
 
-    download_wait(download_path)
-except Exception as e:
-    print(e)
-    pass
+    checkAll = browser.find_element(By.ID,'checkAll')
+    checkAll.click()
+    time.sleep(1)
 
-##########
-# https://dpm.dmsone.vn/catalog/unit-tree/info
-_URL = "https://dpm.dmsone.vn/catalog/unit-tree/info"
+    btnAgree = browser.find_element(By.ID,'group_insert_btnAgree')
+    btnAgree.click()
+    time.sleep(1)
+
+    btnAgree = browser.find_element(By.XPATH,'/html/body/div[22]/div[2]/div[4]/a[1]/span')
+    print(btnAgree.text)
+    btnAgree.click()
+
+    time.sleep(1)
+
+    errMsg = browser.find_element(By.ID,'errMsg')
+    return errMsg.text
 
 
-# Close the browser
-
-print("quit")
-browser.quit()
+browser = webdriver.Chrome(service=service, options=chrome_options)
+login(browser)
+duyetKHAll(browser)
