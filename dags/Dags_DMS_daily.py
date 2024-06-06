@@ -376,7 +376,7 @@ def  duyetKHAll(browser):
 # begein DAG
 with DAG(
     dag_id="DMS_export_daily",
-    schedule_interval="30 11,23 * * *",
+    schedule_interval="10 11,23 * * *",
     # schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, tz="Asia/Bangkok"),
     catchup=False,
@@ -392,12 +392,12 @@ with DAG(
         return "Whatever you return gets printed in the logs"
 
     printLog = print_context()
-    with TaskGroup("section_0", tooltip="Tasks for Load Data") as section_0:
-            RunPythonScript = BashOperator(
-                task_id="Remove_Exist_File",
-                bash_command=f"ls {download_path}; exit 0;",
-                # bash_command=f"dir   {download_path}",
-            )
+    # with TaskGroup("section_0", tooltip="Tasks for Load Data") as section_0:
+    #         RunPythonScript = BashOperator(
+    #             task_id="Remove_Exist_File",
+    #             bash_command=f"ls {download_path}; exit 0;",
+    #             # bash_command=f"dir   {download_path}",
+    #         )
             
             
 
@@ -464,5 +464,5 @@ with DAG(
         DMS_upload_report = DMS_upload_report()
         duyetKH >> DMS_export_daily >> DMS_upload_report
 
-    start >> printLog >> section_0 >> section_1
+    start >> printLog >>  section_1
 #9.3.Bao_cao_theo_doi_khac_phuc

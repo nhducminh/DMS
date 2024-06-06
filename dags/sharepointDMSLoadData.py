@@ -221,7 +221,7 @@ def MasterData2(folder, fileName):
 # begein DAG
 with DAG(
     dag_id="SharepointLoadData",
-    schedule_interval="0 3 * * *",
+    schedule_interval="0 3,15 * * *",
     # schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, 0, 0, 0, 0, tz="Asia/Bangkok"),
     catchup=False,
@@ -247,7 +247,7 @@ with DAG(
         def LoadSharePointFile():
             # dfFolderPath = pd.DataFrame(columns=["Folder", "File"])
             subFolder = folder_url_shrpt + "/" + subfolder_url_shrpt
-            # folderlist_shrpt = print_folder_contents(ctx, subFolder, "")
+            folderlist_shrpt = print_folder_contents(ctx, subFolder, "")
             flist = fileList(folder_url_shrpt + "/" + subfolder_url_shrpt, ctx)
             print(flist)
             fnamelist = listfilename(localPath)
