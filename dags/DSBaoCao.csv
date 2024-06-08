@@ -10,7 +10,7 @@ Lv1,Lv2,ID_BC,sub_ID_BC,Name,file_name
 4,3,REPORT_CTTL,CBTDTTCTTLTB,4.3 Kết quả chấm trưng bày,
 4,4,REPORT_CTTL,CBTDTTCTTLTB_NEW,"4.4 Tiến độ trả thưởng tích lũy, trưng bày",
 5,1,REPORT_DEBIT,REPORT_CONGNO_CHITIET,5.1. Chi tiết công nợ,
-6,1,RPT_BC_HO_KHO,IDP_BCNPP_3_2,6.1 Xuất nhập tồn,
+6,1,RPT_BC_HO_KHO,IDP_BCNPP_3_2,6.1 Xuất nhập tồn,Bao_cao_xuat_nhap_ton_chi_tiet
 6,2,RPT_BC_HO_KHO,BCCPDCDCK,6.2 Phiếu điều chỉnh và điều chuyển,
 6,3,RPT_BC_HO_KHO,DETAIL_INVENTORY,6.3  Chi tiết xuất nhập tồn,Ban_ke_chi_tiet_nhap_xuat_ton_kho
 7,1,NVTT,BCDBNVTT,7.1 NVTT - địa bàn quản lý,

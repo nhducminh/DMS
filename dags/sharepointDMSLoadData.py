@@ -221,7 +221,7 @@ def MasterData2(folder, fileName):
 # begein DAG
 with DAG(
     dag_id="SharepointLoadData",
-    schedule_interval="0 3,15 * * *",
+    schedule_interval="0 5,17 * * *",
     # schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, 0, 0, 0, 0, tz="Asia/Bangkok"),
     catchup=False,
@@ -327,7 +327,7 @@ with DAG(
 
             # Convert the 'Ngày' column to datetime format using the specified date format
             dfVTKHC2["Ngày"] = pd.to_datetime(dfVTKHC2["Ngày"], format="%d-%m-%Y")
-
+    
             # Save the cleaned and processed DataFrame to a CSV file
             print(f"save to {localPath}/Summary/dfVTKHC2.csv")
             dfVTKHC2.to_csv(localPath + "/Summary/dfVTKHC2.csv", index=False)

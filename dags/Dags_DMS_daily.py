@@ -245,7 +245,7 @@ def login(browser):
 
 def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click):
     # Export file
-    print(f'exportBC {download_path}, {ID_BC}, {sub_ID_BC}, {ID_fromDate}, {ID_toDate}, {ID_btn_click}')
+    print(f'\nexportBC {download_path}, {ID_BC}, {sub_ID_BC}, {ID_fromDate}, {ID_toDate}, {ID_btn_click}')
     _URL = "https://dpm.dmsone.vn/report/list"
     id = "btnExportExcel"
 
@@ -278,26 +278,46 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, I
                 trytofind = False
 
     ReportCtnSection = browser.find_element(By.CLASS_NAME, "ReportCtnSection")
+    # print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
     print(f"{begin}=>{end}")
-    fromdate = ReportCtnSection.find_element(By.ID, ID_fromDate)
-    fromdate = ReportCtnSection.find_element(By.ID, ID_fromDate)
+    try:
+        print('fDate')
+        fromdate = ReportCtnSection.find_element(By.ID, 'fDate')
+        todate = ReportCtnSection.find_element(By.ID, 'tDate')
+        result = 2
+    except Exception as e:
+        print(e)
+    # finally:
+        print('fromDate')
+        fromdate = ReportCtnSection.find_element(By.ID, ID_fromDate)
+        todate = ReportCtnSection.find_element(By.ID, ID_toDate)
+        result = 3
+
+        
     fromdate.click()
     fromdate.send_keys(begin)
-
     time.sleep(1)
-
-    todate = ReportCtnSection.find_element(By.ID, ID_toDate)
     todate.click()
     todate.send_keys(end)
     time.sleep(1)
 
-    btnReport = ReportCtnSection.find_element(By.ID, ID_btn_click)
+    try:
+        print('btnSearch')
+        btnReport = ReportCtnSection.find_element(By.ID, 'btnSearch')
+        result = 4
+    except Exception as e:
+        print(e)        
+    # finally:
+        print('btn_click')
+        btnReport = ReportCtnSection.find_element(By.ID, ID_btn_click)
+        result = 5
     btnReport.click()
     time.sleep(10)
     download_wait(download_path)
 
     btnerrMsg = browser.find_element(By.ID,"errMsg")
     print(btnerrMsg.text)
+    print(result)
     return len(btnerrMsg.text)
     
 
@@ -311,7 +331,7 @@ def exportBC_index(browser, Lv1, Lv2):
     filterBC2 = dsBaocao["Lv2"] == Lv2
     BC = dsBaocao[filterBC1 * filterBC2].reset_index(drop=True).to_dict()
     
-    print(BC)
+    print(f"\n{BC}")
     try:
         for f in os.listdir(download_path):
             if BC["file_name"][0] in f:
@@ -376,7 +396,7 @@ def  duyetKHAll(browser):
 # begein DAG
 with DAG(
     dag_id="DMS_export_daily",
-    schedule_interval="10 11,23 * * *",
+    schedule_interval="10 9,21 * * *",
     # schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, tz="Asia/Bangkok"),
     catchup=False,
