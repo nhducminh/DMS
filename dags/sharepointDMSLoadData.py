@@ -26,6 +26,7 @@ import os
 import sys
 import tempfile
 import time
+import datetime as dt
 from pprint import pprint
 from typing import List
 
@@ -248,11 +249,17 @@ with DAG(
             # dfFolderPath = pd.DataFrame(columns=["Folder", "File"])
             subFolder = folder_url_shrpt + "/" + subfolder_url_shrpt
             folderlist_shrpt = print_folder_contents(ctx, subFolder, "")
+            print(dt.datetime.now())
+            #get all file in sharepoint folder
             flist = fileList(folder_url_shrpt + "/" + subfolder_url_shrpt, ctx)
-            print(flist)
+            print(f'Sharepoint {flist}')
+            print(f'Sharepoint {len(flist)}')
+            # pd.DataFrame(flist).to_csv(f"{localPath}/flist.csv",index=False)
+            #get all file in local folder
             fnamelist = listfilename(localPath)
-            print(fnamelist)
-            print(len(fnamelist))
+            print(f'Local {fnamelist}')
+            print(f'Local {len(fnamelist)}')
+            # pd.DataFrame(fnamelist).to_csv(f"{localPath}/fnamelist.csv",index=False)
             
             
             fcount = 0
@@ -264,32 +271,47 @@ with DAG(
                 "Danh_sach_nhan_vien",
                 "Thong_Tin_San_Pham",
             ]
+            print(dt.datetime.now())
+            
             for folder in folderlist:
+                print(dt.datetime.now())
+                print(folder)
                 try:
                     if not os.path.exists(f"{localPath}/{folder}"):
                         os.mkdir(f"{localPath}/{folder}")
                         print(f"create folder {localPath}/{folder}")
                 except:
                     pass
-
-                for f in flist:
+                flist_cp = flist.copy()
+                for ff in flist:
+                    if ff[str.rfind(ff, "/") + 1 :] in fnamelist:
+                        flist_cp.pop(flist_cp.index(ff))
+                        # print(ff)
+                # print(f'flist_cp {len(flist_cp)}')
+                
+                # for f in flist:
+                for f in flist_cp:
                     foldername = f[: str.rfind(f, "/")]
                     filename = f[str.rfind(f, "/") + 1 :]
-                    print(f'xxx test {foldername} ->> {filename}')                    
+                    # print(f'xxx test {foldername} ->> {filename}')                    
                     if str.find(f, folder) > -1:
-                        print(f"{localPath}/{folder}/{filename}")
-                        print((f in fnamelist))
-                        if  not (f in fnamelist):
-                            try:
-                                site.download_file_sharepoint(foldername, f"{localPath}/{folder}", filename, url_shrpt)
-                                print(fcount)
-                                fcount +=1
-                            except:
-                                print(f"Download fail {filename}")
-                                pass
-                    else:
-                        print("next")
-                        fcount
+                        print(f'Copy from sharepoint  {foldername} ->> {filename}')
+                        print(f"To local {localPath}/{folder}/{filename}")
+                        # print((f in fnamelist))
+                        #nếu f in sharepoint ko thuộc fnamelist local thì download
+                        # if  not (f in fnamelist):
+                        try:
+                            #download file
+                            site.download_file_sharepoint(foldername, f"{localPath}/{folder}", filename, url_shrpt)                            
+                            fcount +=1
+                            print(f'{fcount}')
+                        except:
+                            print(f"Download fail {filename}")
+                            pass
+                    # else:
+                    #     # print("next")
+                    #     pass
+                    #     # fcount
             
             print(f'{fcount} downloaded')
             fnamelist = listfilename(localPath)

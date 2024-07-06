@@ -286,7 +286,7 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, I
         todate = ReportCtnSection.find_element(By.ID, 'tDate')
         result = 2
     except Exception as e:
-        print(e)
+        # print(e)
     # finally:
         print('fromDate')
         fromdate = ReportCtnSection.find_element(By.ID, ID_fromDate)
@@ -306,7 +306,7 @@ def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, I
         btnReport = ReportCtnSection.find_element(By.ID, 'btnSearch')
         result = 4
     except Exception as e:
-        print(e)        
+        # print(e)        
     # finally:
         print('btn_click')
         btnReport = ReportCtnSection.find_element(By.ID, ID_btn_click)
