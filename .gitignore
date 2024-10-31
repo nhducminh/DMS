@@ -4,9 +4,7 @@ Danh_sach_nhan_vien/
 Du_lieu_danh_muc_khachhang/
 Units/
 Thong_Tin_San_Pham/
-dags/__pycache__/
 .gitignore
-2nong_price/2nong/
 Summary/
 x.py
 Selenium copy.py
@@ -16,7 +14,11 @@ DMS_daily/
 DMSdownload/
 dags/__pycache__/
 2nong_price/
-dags/__pycache__/sharepointDMSLoadData.cpython-310.pyc
-dags/__pycache__/sharepointDMSLoadData.cpython-310.pyc
 flist.csv
 fnamelist.csv
+.env
+logs/
+chromedriver-linux64/
+chromedriver-linux64.zip
+chromedriver-linux64/LICENSE.chromedriver
+logs/scheduler/

@@ -29,7 +29,7 @@ import time
 import datetime as dt
 from pprint import pprint
 from typing import List
-
+from dotenv import load_dotenv
 import pandas as pd
 import pendulum
 import pysharepoint as ps
@@ -109,14 +109,16 @@ def insertDF(df, list):
 ##############################################################
 # This will be the URL that points to your sharepoint site.
 # Make sure you change only the parts of the link that start with "Your"
-sharepoint_base_url = "https://pvfcco.sharepoint.com"
-url_shrpt = "https://pvfcco.sharepoint.com/sites/DMSTNB"
-username_shrpt = "nhdminh@pvfcco.com.vn"
-password_shrpt = "a3671c389"
-folder_url_shrpt = "/sites/DMSTNB/Shared%20Documents"
-# subfolder_url_shrpt = "Báo cáo - DMS/Daily"
+load_dotenv()
+
+username_shrpt = os.getenv('username_shrpt')
+password_shrpt = os.getenv('password_shrpt')
+sharepoint_base_url = os.getenv('sharepoint_base_url')
+url_shrpt = os.getenv('url_shrpt')
+folder_url_shrpt =  os.getenv('folder_url_shrpt')
 subfolder_url_shrpt = "Báo cáo - DMS"
-localPath = "/home/nhdminh/DMS/DMS_sharepoint"
+
+localPath = "DMS_sharepoint"
 try:
     os.mkdir(localPath)
 except:

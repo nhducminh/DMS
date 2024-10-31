@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime as dt
 import getpass
+from dotenv import load_dotenv
 
 import datetime as dt
 import getpass
@@ -45,10 +46,17 @@ from sqlalchemy import create_engine
 from sqlalchemy import create_engine
 
 parent_path = os.path.abspath(os.path.join(os.path.abspath(""), os.pardir))
-download_path = f"{os.path.abspath('')}/DMS/DMS_daily"
 noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y%m%d")
 
-download_path = "/home/nhdminh/DMS/DMS_daily/" + noww
+try: 
+    os.mkdir('DMS_daily')
+except:pass
+
+try: 
+    os.mkdir(f'DMS_daily/{noww}')
+except:pass
+
+download_path = "DMS_daily/" + noww
 
 try:
     os.mkdir(download_path)
@@ -60,7 +68,7 @@ begin = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(da
 
 
 # Define ChromeDriver service
-service = Service("/usr/local/bin/chromedriver")  # Adjust the path if needed
+service = Service("chromedriver-linux64/chromedriver")  # Adjust the path if needed
 # Set Chrome options for headless mode and download directory
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--headless")
@@ -74,15 +82,28 @@ chrome_options.add_experimental_option("prefs", {"download.default_directory": d
 ##############################################################
 # This will be the URL that points to your sharepoint site.
 # Make sure you change only the parts of the link that start with "Your"
-sharepoint_base_url = "https://pvfcco.sharepoint.com"
-url_shrpt = "https://pvfcco.sharepoint.com/sites/DMSTNB"
-username_shrpt = "nhdminh@pvfcco.com.vn"
-password_shrpt = "a3671c389"
-folder_url_shrpt = "/sites/DMSTNB/Shared%20Documents"
-subfolder_url_shrpt = "Báo cáo - DMS/DMS_daily"
+
+
 
 noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y%m%d")
-localPath = "/home/nhdminh/DMS/DMS_daily/" + noww
+try:
+    os.mkdir('DMS_daily')
+except:pass
+
+localPath = "DMS_daily/" + noww
+
+load_dotenv()
+dms_user =  os.getenv('DMSUSER')
+dms_password = os.getenv('DMSPASSWORD')
+
+username_shrpt = os.getenv('username_shrpt')
+password_shrpt = os.getenv('password_shrpt')
+
+sharepoint_base_url = os.getenv('sharepoint_base_url')
+url_shrpt = os.getenv('url_shrpt')
+folder_url_shrpt =  os.getenv('folder_url_shrpt')
+subfolder_url_shrpt = "Báo cáo - DMS/DMS_daily"
+
 
 ##############################################################
 ###Authentication###For authenticating into your sharepoint site###
@@ -226,10 +247,12 @@ def login(browser):
     # Login to DMS
     print("Login to DMS")
     try:
-        elem = browser.find_element(By.NAME, "username")  # Find the Username
-        elem.send_keys("madmin")
-        elem = browser.find_element(By.NAME, "password")  # Find the Password
-        elem.send_keys("PVFCCo@2023" + Keys.RETURN)
+        elem = browser.find_element(By.NAME, 'username')  # Find the Username
+
+        elem.send_keys(dms_user)
+        elem = browser.find_element(By.NAME,'password')  # Find the Password
+        
+        elem.send_keys(dms_password + Keys.RETURN)
         print("Page Title", browser.title)
         time.sleep(5)
         elem = browser.find_element(By.ID, "spHeaderShopInf")
@@ -240,7 +263,6 @@ def login(browser):
         print("quit")
         browser.quit()
         return -1
-
 
 
 def exportBC(browser, download_path, ID_BC, sub_ID_BC, ID_fromDate, ID_toDate, ID_btn_click):
@@ -326,7 +348,7 @@ def exportBC_index(browser, Lv1, Lv2):
     
     print(f'exportBC_index {Lv1}, {Lv2}:')    
     
-    dsBaocao = pd.read_csv("/home/nhdminh/DMS/dags/DSBaoCao.csv")
+    dsBaocao = pd.read_csv("dags/DSBaoCao.csv")
     filterBC1 = dsBaocao["Lv1"] == Lv1
     filterBC2 = dsBaocao["Lv2"] == Lv2
     BC = dsBaocao[filterBC1 * filterBC2].reset_index(drop=True).to_dict()
@@ -449,7 +471,7 @@ with DAG(
 
             n = 3
             
-            dsBaocao = pd.read_csv("/home/nhdminh/DMS/dags/DSBaoCao.csv")
+            dsBaocao = pd.read_csv("dags/DSBaoCao.csv")
             dsBaocao = dsBaocao[~dsBaocao['file_name'].isna()]
             for index,row in dsBaocao.iterrows():
                 try:

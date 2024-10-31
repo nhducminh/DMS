@@ -4,6 +4,8 @@ import os
 import sys
 import tempfile
 import time
+from dotenv import load_dotenv
+
 from pprint import pprint
 from typing import List
 
@@ -35,7 +37,7 @@ with DAG(
     # schedule="@daily",
     start_date=pendulum.datetime(2023, 10, 30, tz="Asia/Bangkok"),
     catchup=False,
-    tags=["example"],
+    tags=["DMS"],
 ) as dag:
     start = EmptyOperator(task_id="start")
 
@@ -51,7 +53,7 @@ with DAG(
     with TaskGroup("section_2", tooltip="Tasks for Load Data") as section_2:
         RunPythonScript = BashOperator(
             task_id="cleanData",
-            bash_command="/bin/python3 '/home/nhdminh/DMS/dags/BC_GSBH.py'",
+            bash_command="/bin/python3 'opt/dags/BC_GSBH.py'",
         )
     start >> printLog >> section_2
     # start >> printLog >> section_1 >> section_2

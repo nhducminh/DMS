@@ -5,7 +5,7 @@ import sys
 import tempfile
 import time
 import pytz
-
+from dotenv import load_dotenv
 
 from pprint import pprint
 from typing import List
@@ -36,20 +36,22 @@ from datetime import datetime, timezone
 
 
 ##############################################################
-# def function
-
-
-##############################################################
 # This will be the URL that points to your sharepoint site.
 # Make sure you change only the parts of the link that start with "Your"
-sharepoint_base_url = "https://pvfcco.sharepoint.com"
-url_shrpt = "https://pvfcco.sharepoint.com/sites/DMSTNB"
-username_shrpt = "nhdminh@pvfcco.com.vn"
-password_shrpt = "a3671c389"
-folder_url_shrpt = "/sites/DMSTNB/Shared%20Documents"
-# subfolder_url_shrpt = "Báo cáo - DMS/Daily"
+# Load from .env
+load_dotenv()
+username_shrpt = os.getenv('username_shrpt')
+password_shrpt = os.getenv('password_shrpt')
+
+sharepoint_base_url = os.getenv('sharepoint_base_url')
+url_shrpt = os.getenv('url_shrpt')
+folder_url_shrpt =  os.getenv('folder_url_shrpt')
+
 subfolder_url_shrpt = "Báo cáo - DMS"
-localPath = f"/home/nhdminh/DMS/2nong_price"
+localPath = f"2nong_price"
+try:
+    os.mkdir(localPath)
+except:pass
 ##############################################################
 url = "https://api-production.2nong.vn/v0/products"
 
@@ -124,6 +126,7 @@ with DAG(
             df = df.reset_index(drop=True)
             print(len(df))
             print("save to CSV")
+            print(os.listdir())
             df.to_csv(f"{localPath}/{noww}_2nong_Product_Price.csv", index=False)
             dfList = df.explode("info").reset_index(drop=True)
             temp = pd.DataFrame(dfList["info"].values.tolist())

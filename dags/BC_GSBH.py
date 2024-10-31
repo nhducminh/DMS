@@ -3,6 +3,7 @@ import datetime as dt
 import os
 import shutil
 import pytz
+from dotenv import load_dotenv
 
 import numpy as np
 import openpyxl
@@ -25,7 +26,7 @@ noww = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%Y
 toDate = dt.datetime.now(pytz.timezone("Asia/Bangkok")).date().strftime(format="%d/%m/%Y")
 fromDate = (dt.datetime.now(pytz.timezone("Asia/Bangkok")).date() - dt.timedelta(days=7)).strftime(format="%d/%m/%Y")
 parent_path = os.path.abspath(os.path.join(os.path.abspath(""), os.pardir))
-dailyFolder = f"/home/nhdminh/DMS/DMS_daily"
+dailyFolder = f"DMS_daily"
 print(dailyFolder)
 reportFolder = os.path.abspath(os.path.join(dailyFolder, noww))
 print(reportFolder)
