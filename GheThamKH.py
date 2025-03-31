@@ -27,7 +27,20 @@ st.sidebar.header("Bộ lọc")
 mien_filter = st.sidebar.selectbox("Chọn Miền", df_ghetham["Miền"].unique())
 nvtt_filter = st.sidebar.selectbox("Chọn NVTT", df_ghetham["MÃ NVTT"].unique())
 date_filter = st.sidebar.date_input("Chọn Ngày", pd.to_datetime("2025-03-10"))
+# Sidebar thông tin
+st.sidebar.header("Thông tin")
+# Thống kê số lượng C2 ghé thăm theo Miền và NVTT
+filtered_by_mien_nvtt = df_ghetham[
+    (df_ghetham["Miền"] == mien_filter) &
+    (df_ghetham["MÃ NVTT"] == nvtt_filter)
+]
 
+c2_stats_mien_nvtt = filtered_by_mien_nvtt.groupby(["MÃ NVTT", "Ngày"]).size().reset_index(name="Số lượng C2 ghé thăm")
+c2_stats_mien_nvtt = c2_stats_mien_nvtt.rename(columns={"MÃ NVTT": "Tên NVTT", "Ngày": "Ngày ghé thăm"})
+
+# Hiển thị bảng thống kê theo Miền và NVTT
+st.sidebar.write("### Thống kê ghé thăm C2 của NVTT (Lọc theo Miền và NVTT)")
+st.sidebar.dataframe(c2_stats_mien_nvtt)
 # Lọc dữ liệu theo bộ lọc
 filtered_ghetham = df_ghetham[
     (df_ghetham["Miền"] == mien_filter) &
