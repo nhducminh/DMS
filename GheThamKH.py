@@ -6,7 +6,7 @@ from geopy.distance import geodesic
 import matplotlib.pyplot as plt
 
 # Đọc dữ liệu từ file
-@st.cache
+#@st.cache
 def load_data():
     df_kh = pd.read_excel("DSKH.xlsx")  # File danh sách khách hàng
     df_kh = df_kh.dropna(axis=1, how='all')
