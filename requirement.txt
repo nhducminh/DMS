@@ -18,3 +18,7 @@ apache-airflow-providers-postgres
 apache-airflow-providers-apache-spark
 apache-airflow-providers-databricks
 Flask-Session==0.5.0
+geopandas 
+shapely 
+geopy 
+matplotlib
