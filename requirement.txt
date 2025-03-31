@@ -1,5 +1,4 @@
-
-geopandas 
-shapely 
-geopy 
+geopandas
+shapely
+geopy
 matplotlib
