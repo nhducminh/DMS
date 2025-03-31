@@ -33,6 +33,13 @@ filtered_by_mien_nvtt = df_ghetham[
 
 c2_stats_mien_nvtt = filtered_by_mien_nvtt.groupby(["MÃ NVTT", "Ngày"]).size().reset_index(name="Số lượng C2 ghé thăm")
 c2_stats_mien_nvtt = c2_stats_mien_nvtt.rename(columns={"MÃ NVTT": "Tên NVTT", "Ngày": "Ngày ghé thăm"})
+# Thêm dòng tổng
+total_row = pd.DataFrame({
+    "Tên NVTT": ["Total"],
+    "Ngày ghé thăm": [""],
+    "Số lượng C2 ghé thăm": [c2_stats_mien_nvtt["Số lượng C2 ghé thăm"].sum()]
+})
+c2_stats_mien_nvtt = pd.concat([c2_stats_mien_nvtt, total_row], ignore_index=True)
 
 # Hiển thị bảng thống kê theo Miền và NVTT
 st.sidebar.write("### Thống kê ghé thăm C2 của NVTT (Lọc theo Miền và NVTT)")
