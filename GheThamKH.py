@@ -6,18 +6,10 @@ from geopy.distance import geodesic
 import matplotlib.pyplot as plt
 
 # Đọc dữ liệu từ file
-#@st.cache
+@st.cache
 def load_data():
-    df_kh = pd.read_excel("DSKH.xlsx")  # File danh sách khách hàng
-    df_kh = df_kh.dropna(axis=1, how='all')
-    df_kh.columns = df_kh.iloc[0]  # Set 4th row as column headers
-    df_kh = df_kh[1:]  # Remove the first 4 rows (including the new header row)
-
-    df_ghetham = pd.read_excel("DSGhetham.xlsx")  # File danh sách ghé thăm    
-    df_ghetham = df_ghetham.dropna(axis=1, how='all')
-    # Remove first 3 rows and set 4th row as columns
-    df_ghetham.columns = df_ghetham.iloc[3]  # Set 4th row as column headers
-    df_ghetham = df_ghetham[4:]  # Remove the first 4 rows (including the new header row)
+    df_kh = pd.read_csv("DSKH.csv")  # File danh sách khách hàng
+    df_ghetham = pd.read_csv("DSGhetham.csv")  # File danh sách ghé thăm    
     return df_kh, df_ghetham
 
 # Tải dữ liệu
