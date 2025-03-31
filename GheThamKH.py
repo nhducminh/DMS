@@ -39,6 +39,13 @@ result = result.sort_values(by="Thời gian bắt đầu").reset_index(drop=True
 # Hiển thị dữ liệu đã lọc
 st.write("### Dữ liệu ghé thăm đã lọc")
 st.dataframe(result)
+# Thống kê số lượng C2 ghé thăm theo ngày
+c2_stats = filtered_ghetham.groupby(["MÃ NVTT", "Ngày"]).size().reset_index(name="Số lượng C2 ghé thăm")
+c2_stats = c2_stats.rename(columns={"MÃ NVTT": "Tên NVTT", "Ngày": "Ngày ghé thăm"})
+
+# Hiển thị bảng thống kê
+st.write("### Thống kê ghé thăm C2 của NVTT")
+st.dataframe(c2_stats)
 
 # Vẽ bản đồ
 if not result.empty:
