@@ -6,7 +6,7 @@ from geopy.distance import geodesic
 import matplotlib.pyplot as plt
 
 # Đọc dữ liệu từ file
-@st.cache
+@st.cache_data # Caching the data loading function
 def load_data():
     df_kh = pd.read_csv("DSKH.csv")  # File danh sách khách hàng
     df_ghetham = pd.read_csv("DSGhetham.csv")  # File danh sách ghé thăm    
@@ -14,9 +14,13 @@ def load_data():
 
 # Tải dữ liệu
 df_kh, df_ghetham = load_data()
+
+df_ghetham = df_ghetham[~df_ghetham['Miền'].str.contains("Công ty Miền Bắc|Vùng đào tạo", na=False)] # Lọc bỏ các bản ghi không cần thiết
+print(df_ghetham)
 # Thống kê số lượng C2 ghé thăm theo ngày cho toàn bộ dữ liệu
 c2_stats_all = df_ghetham.groupby(["MÃ NVTT", "Ngày"]).size().reset_index(name="Số lượng C2 ghé thăm")
 c2_stats_all = c2_stats_all.rename(columns={"MÃ NVTT": "Tên NVTT", "Ngày": "Ngày ghé thăm"})
+
 
 # Sidebar filters
 st.sidebar.header("Bộ lọc")
@@ -28,13 +32,19 @@ mien_filter = st.sidebar.selectbox("Chọn Miền", df_ghetham["Miền"].unique(
 filtered_nvtt = df_ghetham[df_ghetham["Miền"] == mien_filter]
 nvtt_filter = st.sidebar.selectbox("Chọn NVTT", filtered_nvtt["MÃ NVTT"].unique())
 
-# Lọc danh sách theo Miền và NVTT
+# Lọc danh sách Ngày dựa trên Miền và NVTT đã chọn
+filtered_date = filtered_nvtt[filtered_nvtt["MÃ NVTT"] == nvtt_filter]
+date_filter = st.sidebar.date_input("Chọn Ngày", pd.to_datetime(filtered_date["Ngày"]).min())
+
+
+# Sidebar thông tin
+st.sidebar.header("Thông tin")
+# Thống kê số lượng C2 ghé thăm theo Miền và NVTT
 filtered_by_mien_nvtt = df_ghetham[
     (df_ghetham["Miền"] == mien_filter) &
     (df_ghetham["MÃ NVTT"] == nvtt_filter)
 ]
 
-# Thống kê số lượng C2 ghé thăm theo Miền và NVTT
 c2_stats_mien_nvtt = filtered_by_mien_nvtt.groupby(["MÃ NVTT", "Ngày"]).size().reset_index(name="Số lượng C2 ghé thăm")
 c2_stats_mien_nvtt = c2_stats_mien_nvtt.rename(columns={"MÃ NVTT": "Tên NVTT", "Ngày": "Ngày ghé thăm"})
 
@@ -42,17 +52,14 @@ c2_stats_mien_nvtt = c2_stats_mien_nvtt.rename(columns={"MÃ NVTT": "Tên NVTT",
 st.sidebar.write("### Thống kê ghé thăm C2 của NVTT (Lọc theo Miền và NVTT)")
 st.sidebar.dataframe(c2_stats_mien_nvtt)
 
-# Chọn ngày từ bảng c2_stats_mien_nvtt
-available_dates = c2_stats_mien_nvtt["Ngày ghé thăm"].dt.strftime('%Y-%m-%d').unique()
-selected_date = st.sidebar.selectbox("Chọn Ngày", available_dates)
-date_filter = pd.to_datetime(selected_date)  # Chuyển đổi ngày được chọn về định dạng datetime
 
 # Lọc dữ liệu theo bộ lọc
 filtered_ghetham = df_ghetham[
     (df_ghetham["Miền"] == mien_filter) &
     (df_ghetham["MÃ NVTT"] == nvtt_filter) &
-    (pd.to_datetime(df_ghetham["Ngày"]) == date_filter)
+    (pd.to_datetime(df_ghetham["Ngày"]) == pd.to_datetime(date_filter))
 ]
+
 # Kết hợp dữ liệu ghé thăm với danh sách khách hàng
 result = filtered_ghetham.merge(df_kh, left_on="Mã KH", right_on="Mã khách hàng", how="left")
 result = result[["Tên KH", "LAT", "LNG", "Thời gian bắt đầu", "Thời gian kết thúc", "Thời gian Ghé thăm","Độ lệch khoảng cách khi ghé thăm"]]
@@ -60,13 +67,7 @@ result["LAT"] = pd.to_numeric(result["LAT"], errors="coerce")
 result["LNG"] = pd.to_numeric(result["LNG"], errors="coerce")
 result["Thời gian bắt đầu"] = pd.to_datetime(result["Thời gian bắt đầu"])
 result = result.sort_values(by="Thời gian bắt đầu").reset_index(drop=True)
-
-
-
-# Vẽ bản đồ
-# Hiển thị dữ liệu đã lọc
-st.write("### Dữ liệu ghé thăm đã lọc")
-st.dataframe(result)
+st.dataframe(result)  # Hiển thị bảng kết quả với khả năng cuộn và sắp xếp
 
 
 # Vẽ bản đồ
@@ -79,7 +80,7 @@ if not result.empty:
     # Vẽ bản đồ
     fig, ax = plt.subplots(figsize=(10, 10))
     vietnam_map = gpd.read_file("map/gadm41_VNM_3.shp")  # Đọc shapefile bản đồ Việt Nam
-    vietnam_map.plot(ax=ax, color="lightgrey", edgecolor="black")
+    vietnam_map.plot(ax=ax, color="lightgrey", edgecolor="grey", alpha=0.5)
     gdf_customers.plot(ax=ax, color="blue", markersize=50, label="Khách hàng")
     gpd.GeoSeries([line], crs="EPSG:4326").plot(ax=ax, color="green", linewidth=1, label="Đường kết nối")
 
