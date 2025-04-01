@@ -44,6 +44,13 @@ filtered_by_mien_nvtt = df_ghetham[
 
 c2_stats_mien_nvtt = filtered_by_mien_nvtt.groupby(["MÃ NVTT", "Ngày"]).size().reset_index(name="Số lượng C2 ghé thăm")
 c2_stats_mien_nvtt = c2_stats_mien_nvtt.rename(columns={"MÃ NVTT": "Tên NVTT", "Ngày": "Ngày ghé thăm"})
+
+# Chọn ngày từ bảng c2_stats_mien_nvtt
+available_dates = c2_stats_mien_nvtt["Ngày ghé thăm"].dt.strftime('%Y-%m-%d').unique()
+selected_date = st.sidebar.selectbox("Chọn Ngày", available_dates)
+date_filter = pd.to_datetime(selected_date)  # Chuyển đổi ngày được chọn về định dạng datetime
+
+
 # Thêm dòng tổng
 total_row = pd.DataFrame({
     "Tên NVTT": ["Total"],
