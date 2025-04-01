@@ -20,9 +20,6 @@ df_kh, df_ghetham = load_data()
 # Sidebar filters
 st.sidebar.header("Bộ lọc")
 
-# Lọc danh sách Miền
-mien_filter = st.sidebar.selectbox("Chọn Miền", df_ghetham["Miền"].unique())
-
 # Lọc danh sách NVTT dựa trên Miền đã chọn
 filtered_nvtt = df_ghetham[df_ghetham["Miền"] == mien_filter]
 nvtt_filter = st.sidebar.selectbox("Chọn NVTT", filtered_nvtt["MÃ NVTT"].unique())
@@ -30,8 +27,6 @@ nvtt_filter = st.sidebar.selectbox("Chọn NVTT", filtered_nvtt["MÃ NVTT"].uniq
 # Lọc danh sách Ngày dựa trên Miền và NVTT đã chọn
 filtered_date = filtered_nvtt[filtered_nvtt["MÃ NVTT"] == nvtt_filter]
 date_filter = st.sidebar.date_input("Chọn Ngày", pd.to_datetime(filtered_date["Ngày"]).min())
-
-
 
 
 # Sidebar thông tin
