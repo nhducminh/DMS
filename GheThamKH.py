@@ -16,7 +16,7 @@ def load_data():
 df_kh, df_ghetham = load_data()
 # Thống kê số lượng C2 ghé thăm theo ngày cho toàn bộ dữ liệu
 c2_stats_all = df_ghetham.groupby(["MÃ NVTT", "Ngày"]).size().reset_index(name="Số lượng C2 ghé thăm")
-c2_stats_all = c2_stats_all.rename(columns={"MÃ NVTT": "Tên NVTT", "Ngày": "Ngày ghé thăm"})
+# c2_stats_all = c2_stats_all.rename(columns={"MÃ NVTT": "Tên NVTT", "Ngày": "Ngày ghé thăm"})
 
 # Sidebar filters
 st.sidebar.header("Bộ lọc")
