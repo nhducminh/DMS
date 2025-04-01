@@ -14,28 +14,24 @@ def load_data():
 
 # Tải dữ liệu
 df_kh, df_ghetham = load_data()
+# Thống kê số lượng C2 ghé thăm theo ngày cho toàn bộ dữ liệu
+c2_stats_all = df_ghetham.groupby(["MÃ NVTT", "Ngày"]).size().reset_index(name="Số lượng C2 ghé thăm")
+c2_stats_all = c2_stats_all.rename(columns={"MÃ NVTT": "Tên NVTT", "Ngày": "Ngày ghé thăm"})
 
 
- 
- 
- 
- 
- # Sidebar filters
- st.sidebar.header("Bộ lọc")
- 
- # Lọc danh sách Miền
- mien_filter = st.sidebar.selectbox("Chọn Miền", df_ghetham["Miền"].unique())
- nvtt_filter = st.sidebar.selectbox("Chọn NVTT", df_ghetham["MÃ NVTT"].unique())
- date_filter = st.sidebar.date_input("Chọn Ngày", pd.to_datetime("2025-03-10"))
- 
- # Lọc danh sách NVTT dựa trên Miền đã chọn
- filtered_nvtt = df_ghetham[df_ghetham["Miền"] == mien_filter]
- nvtt_filter = st.sidebar.selectbox("Chọn NVTT", filtered_nvtt["MÃ NVTT"].unique())
- 
- # Lọc danh sách Ngày dựa trên Miền và NVTT đã chọn
- filtered_date = filtered_nvtt[filtered_nvtt["MÃ NVTT"] == nvtt_filter]
- date_filter = st.sidebar.date_input("Chọn Ngày", pd.to_datetime(filtered_date["Ngày"]).min())
+# Sidebar filters
+st.sidebar.header("Bộ lọc")
 
+# Lọc danh sách Miền
+mien_filter = st.sidebar.selectbox("Chọn Miền", df_ghetham["Miền"].unique())
+
+# Lọc danh sách NVTT dựa trên Miền đã chọn
+filtered_nvtt = df_ghetham[df_ghetham["Miền"] == mien_filter]
+nvtt_filter = st.sidebar.selectbox("Chọn NVTT", filtered_nvtt["MÃ NVTT"].unique())
+
+# Lọc danh sách Ngày dựa trên Miền và NVTT đã chọn
+filtered_date = filtered_nvtt[filtered_nvtt["MÃ NVTT"] == nvtt_filter]
+date_filter = st.sidebar.date_input("Chọn Ngày", pd.to_datetime(filtered_date["Ngày"]).min())
 
 
 # Sidebar thông tin
@@ -49,31 +45,10 @@ filtered_by_mien_nvtt = df_ghetham[
 c2_stats_mien_nvtt = filtered_by_mien_nvtt.groupby(["MÃ NVTT", "Ngày"]).size().reset_index(name="Số lượng C2 ghé thăm")
 c2_stats_mien_nvtt = c2_stats_mien_nvtt.rename(columns={"MÃ NVTT": "Tên NVTT", "Ngày": "Ngày ghé thăm"})
 
-# Thêm dòng tổng
-total_row = pd.DataFrame({
-    "Tên NVTT": ["Total"],
-    "Ngày ghé thăm": [""],
-    "Số lượng C2 ghé thăm": [c2_stats_mien_nvtt["Số lượng C2 ghé thăm"].sum()]
-})
-c2_stats_mien_nvtt = pd.concat([c2_stats_mien_nvtt, total_row], ignore_index=True)
-
 # Hiển thị bảng thống kê theo Miền và NVTT
 st.sidebar.write("### Thống kê ghé thăm C2 của NVTT (Lọc theo Miền và NVTT)")
 st.sidebar.dataframe(c2_stats_mien_nvtt)
-# Lọc dữ liệu theo bộ lọc
-filtered_ghetham = df_ghetham[
-    (df_ghetham["Miền"] == mien_filter) &
-    (df_ghetham["MÃ NVTT"] == nvtt_filter) &
-    (pd.to_datetime(df_ghetham["Ngày"]) == pd.to_datetime(date_filter))
-]
 
-# Kết hợp dữ liệu ghé thăm với danh sách khách hàng
-result = filtered_ghetham.merge(df_kh, left_on="Mã KH", right_on="Mã khách hàng", how="left")
-result = result[["Tên KH", "LAT", "LNG", "Thời gian bắt đầu", "Thời gian kết thúc", "Thời gian Ghé thăm","Độ lệch khoảng cách khi ghé thăm"]]
-result["LAT"] = pd.to_numeric(result["LAT"], errors="coerce")
-result["LNG"] = pd.to_numeric(result["LNG"], errors="coerce")
-result["Thời gian bắt đầu"] = pd.to_datetime(result["Thời gian bắt đầu"])
-result = result.sort_values(by="Thời gian bắt đầu").reset_index(drop=True)
 
 # Hiển thị dữ liệu đã lọc
 st.write("### Dữ liệu ghé thăm đã lọc")
