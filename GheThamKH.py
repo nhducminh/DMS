@@ -49,6 +49,24 @@ c2_stats_mien_nvtt = c2_stats_mien_nvtt.rename(columns={"MÃ NVTT": "Tên NVTT",
 st.sidebar.write("### Thống kê ghé thăm C2 của NVTT (Lọc theo Miền và NVTT)")
 st.sidebar.dataframe(c2_stats_mien_nvtt)
 
+# Lọc dữ liệu theo bộ lọc
+filtered_ghetham = df_ghetham[
+    (df_ghetham["Miền"] == mien_filter) &
+    (df_ghetham["MÃ NVTT"] == nvtt_filter) &
+    (pd.to_datetime(df_ghetham["Ngày"]) == pd.to_datetime(date_filter))
+]
+
+# Kết hợp dữ liệu ghé thăm với danh sách khách hàng
+result = filtered_ghetham.merge(df_kh, left_on="Mã KH", right_on="Mã khách hàng", how="left")
+result = result[["Tên KH", "LAT", "LNG", "Thời gian bắt đầu", "Thời gian kết thúc", "Thời gian Ghé thăm","Độ lệch khoảng cách khi ghé thăm"]]
+result["LAT"] = pd.to_numeric(result["LAT"], errors="coerce")
+result["LNG"] = pd.to_numeric(result["LNG"], errors="coerce")
+result["Thời gian bắt đầu"] = pd.to_datetime(result["Thời gian bắt đầu"])
+result = result.sort_values(by="Thời gian bắt đầu").reset_index(drop=True)
+
+
+
+# Vẽ bản đồ
 
 # Hiển thị dữ liệu đã lọc
 st.write("### Dữ liệu ghé thăm đã lọc")
