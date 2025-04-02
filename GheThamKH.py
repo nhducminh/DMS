@@ -80,7 +80,7 @@ if not result.empty:
     # Vẽ bản đồ
     fig, ax = plt.subplots(figsize=(10, 10))
     vietnam_map = gpd.read_file("map/gadm41_VNM_3.shp")  # Đọc shapefile bản đồ Việt Nam
-    vietnam_map.plot(ax=ax, color="lightgrey", edgecolor="grey", alpha=0.5)
+    vietnam_map.plot(ax=ax, color="lightgrey", edgecolor="grey", alpha=0.3)
     gdf_customers.plot(ax=ax, color="blue", markersize=50, label="Khách hàng")
     gpd.GeoSeries([line], crs="EPSG:4326").plot(ax=ax, color="green", linewidth=1, label="Đường kết nối")
 
@@ -101,7 +101,7 @@ if not result.empty:
         ax.text(
             row.geometry.x,
             row.geometry.y,
-            f"{idx + 1}\n{row['Thời gian bắt đầu'].strftime('%H:%M')}\n{row['Độ lệch khoảng cách khi ghé thăm']}",
+            f"{idx + 1}\n{row['Thời gian bắt đầu'].strftime('%H:%M')}\n{row['Độ lệch khoảng cách khi ghé thăm']} km",
             color="blue",
             fontsize=8,
             ha="center",
